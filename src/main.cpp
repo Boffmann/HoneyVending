@@ -6,17 +6,10 @@
 const int NO_COIN=255;
 // Value of no button pressed
 const int NO_BUTTON_PRESSED = -1;
-// enum representing the 8 doors
-enum class Door {
-door1 = 1,
-door2 = 2,
-door3 = 3,
-door4 = 8,
-door5 = 16,
-door6 = 32,
-door7 = 64,
-door8 = 128
-};
+// Number of Doors
+const int doorNumbers = 8;
+// Array to map door numbers to correct byte for shiftout
+int doorBytes[doorNumbers] = { 1, 2, 4, 8, 16, 32 ,64 ,128 };
 // enum representing servo rotations
 enum class ServoRotations{
 // Rotation for the Servo if honey was sold
@@ -25,8 +18,6 @@ sold = 0,
 aborted = 1
 };
 
-// Number of Doors
-const int doorNumbers = 8;
 
 // rxPin, txPin
 SoftwareSerial coinSerial(2,3);
@@ -76,10 +67,10 @@ void setup() {
  * @param door The door to open
  * @param doorState The state to set the door to. Either HIGH to open door or LOW to close it
  */
-void doorWrite(Door door, int doorState) {
+void doorWrite(int door, int doorState) {
    byte bitsToSend = 0;
    // Convert door to int
-   int doorNumber = static_cast<int>(door);
+   int doorNumber = doorBytes[door];
 
    // Turn on the corresponding bit in bitsToSend
    bitWrite(bitsToSend, doorNumber, doorState);
