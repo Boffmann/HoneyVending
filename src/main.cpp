@@ -3,7 +3,6 @@
 #include <Servo.h>
 
 #include "config.h"
-#include "utils.h"
 
 
 SoftwareSerial coinSerial(config::coinRX, config::coinTX);
@@ -103,11 +102,11 @@ int getButtonPressed() {
     // Set latch to HIGH to transmit data serially
     digitalWrite(latchPin, HIGH);
 
-    uint8_t bitFieldButtonPressed = utils::shiftIn(dataPinButtons, clockPin);
+    uint8_t bitFieldButtonPressed = shiftIn(dataPinButtons, clockPin, MSBFIRST);
     
     for (int i = 0; i < config::shelfCount; i++) {
         if (bitFieldButtonPressed & (1 << i)) {
-            return i + 1;
+            return i;
         }
     }
     return config::NO_BUTTON_PRESSED;
@@ -150,7 +149,7 @@ void resetMashine() {
  */
 void loop() {
     // Add a delay between each loop of 1/10th of a second to give the system some downtime
-    delay(500);
+    delay(300);
     
     // First of all, get if a button is pressed
     int pressedButton = getButtonPressed();
