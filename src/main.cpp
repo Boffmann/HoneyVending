@@ -2,39 +2,17 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-// Value of coin refused. For the used Coin Acceptor a value of 255 means that the inserted coin is refused
-const int NO_COIN=255;
-// Value of no button pressed
-const int NO_BUTTON_PRESSED = -1;
-// Number of Doors
-const int doorNumbers = 8;
-// Array to map door numbers to correct byte for shiftout
-int doorBytes[doorNumbers] = { 1, 2, 4, 8, 16, 32 ,64 ,128 };
-// enum representing servo rotations
-enum class ServoRotations{
-// Rotation for the Servo if honey was sold
-sold = 0,
-// Rotation for the Servo if payment was aborted
-aborted = 1
-};
+#include "config.h"
 
 
-// rxPin, txPin
-SoftwareSerial coinSerial(2,3);
-// The pin to get reset Button pressed
-const int buttonResetPin = 5;
-// The pin to get abort button pressed
-const int buttonAbortPin = 6;
-// The latch pin for shift registers
-const int latchPin = 7;
-// The clockPin for shift registers
-const int clockPin = 8;
-// The dataPin for door shift register
-const int dataPinDoor = 9;
-// The dataPin for buttons shift register
-const int dataPinButtons = 10;
-// The servoPin to control the coinServo
-const int coinServoPin = 11;
+SoftwareSerial coinSerial(config::coinRX, config::coinTX);
+const int buttonResetPin = config::buttonResetPin;
+const int buttonAbortPin = config::buttonAbortPin;
+const int latchPin = config::latchPin;
+const int clockPin = config::clockPin;
+const int dataPinDoor = config::dataPinDoor;
+const int dataPinButtons = config::dataPinButtons;
+const int coinServoPin = config::coinServoPin;
 
 // Servo instance to control servo motor that controls coin rocker
 Servo coinServo;
@@ -45,7 +23,7 @@ Servo coinServo;
 void setup() {
     //Setup Serial Port for Serial Monitor
     Serial.begin(9600);
-    Serial.println("Coin Acceptor Ready")
+    Serial.println("Coin Acceptor Ready");
     
     // Setup Serial Port for Coin Acceptor
     coinSerial.begin(4800);
@@ -60,6 +38,9 @@ void setup() {
     pinMode(clockPin, OUTPUT);
     pinMode(dataPinDoor, OUTPUT);
     pinMode(dataPinButtons, INPUT);
+
+    //Debug purpose only
+    pinMode(13, OUTPUT);
 }
 
 /**
@@ -70,20 +51,20 @@ void setup() {
 void doorWrite(int door, int doorState) {
    byte bitsToSend = 0;
    // Convert door to int
-   int doorNumber = doorBytes[door];
+   int doorNumber = config::doorBytes[door];
 
    // Turn on the corresponding bit in bitsToSend
    bitWrite(bitsToSend, doorNumber, doorState);
 
    // Shift out the bits to open/close door
-   shiftOut(dataPin, clockPin, MSBFIRST, bitsToSend);
+   shiftOut(dataPinDoor, clockPin, MSBFIRST, bitsToSend);
 }
 
 /**
  * Rotates the coinServo
  * @param rotation The rotation to rotate the servo at
  */
-void moveCoinServo(ServoRotation rotation) {
+void moveCoinServo(config::ServoRotations rotation) {
     //Convert rotation to int
     int rotationValue = static_cast<int>(rotation);
     // Sets the servo position
@@ -98,13 +79,11 @@ int getButtonPressed() {
     
     // Check reset Button pressed
     if (digitalRead(buttonResetPin)) {
-        // TODO Return buttonReset
-        return 0;
+        return config::BUTTON_RESET;
     }
     //Check abort button pressed
     if (digitalRead(buttonAbortPin)){
-        // TODO Return buttonAbort
-        return 0;
+        return config::BUTTON_ABORT;
     }
 
     // set latch to LOW to collect parallel data
@@ -116,7 +95,7 @@ int getButtonPressed() {
 
     // Loop over all door buttons. Register transmits information about pins from pin 7 to
     // pin 0. So the loop counts down
-    for (int i = doorNumbers - 1; i >=0; i--) {
+    for (int i = config::doorNumbers - 1; i >=0; i--) {
         // A low to high clock drop causes the shift register's data pin to change state based
         // on value of the next bit in its serial information flow
         digitalWrite(clockPin, LOW);
@@ -125,11 +104,11 @@ int getButtonPressed() {
         if (tmpButtonState) {
             // At this point, a door button was pressed
             pressedButton |= (1 << i);
-            return resultDataIn;
+            return i; // pressedButton is binary representation
         }
         digitalWrite(clockPin, HIGH);
     }
-    return NO_BUTTON_PRESSED;
+    return config::NO_BUTTON_PRESSED;
 }
 
 /**
@@ -146,14 +125,14 @@ int getInsertedCoin() {
         coinValue = coinSerial.read();
 
         // Coin Value of 255 means coin refused
-        if (coinValue != NO_COIN) {
+        if (coinValue != config::NO_COIN) {
                 // Print value
                 Serial.print("Coin accepted. Value is:");
                 Serial.println(coinValue);
-                return coinValue
+                return coinValue;
         }
     } 
-    return NO_COIN;
+    return config::NO_COIN;
 }
 
 
@@ -162,5 +141,19 @@ int getInsertedCoin() {
  * Main loop routine
  */
 void loop() {
+    // Add a delay between each loop of 1/10th of a second to give the system some downtime
+    delay(100);
+    // First of all, get if a button is pressed
+    int pressedButton = getButtonPressed();
+    if (pressedButton == config::NO_BUTTON_PRESSED) {
+        return;
+    }
+
+    // Handle button reset and abort with special treatment
+    if (pressedButton == 1) {
+        digitalWrite(13, HIGH);
+    } else {
+        digitalWrite(13, LOW);
+    }
 
 }
