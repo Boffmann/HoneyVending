@@ -1,17 +1,38 @@
+#ifndef _HONEY_VENDING_CONFIG_H_
+#define _HONEY_VENDING_CONFIG_H_
+
 namespace config {
 
     // Value of coin refused. For the used Coin Acceptor a value of 255 means that the inserted coin is refused
     const int NO_COIN=255;
 
+    // All states of the vending mashine
+    enum State {IDLE, PAYING, ABORTING};
+
     // Number of Doors
-    const int doorNumbers = 8;
+    const int shelfCount = 8;
     // Array to map door numbers to correct byte for shiftout
-    int doorBytes[doorNumbers] = { 1, 2, 4, 8, 16, 32 ,64 ,128 };
+    const int doorBytes[shelfCount] = { 1, 2, 4, 8, 16, 32 ,64 ,128 };
 
     // Button Values
     const int NO_BUTTON_PRESSED = -1;
     const int BUTTON_RESET = -2;
     const int BUTTON_ABORT = -3;
+
+    // Shelf Values
+    const int NO_SHELF = -1;
+
+    // Prices for each shelf
+    const int shelfPrices[shelfCount] = {
+        500, // Shelf 1
+        500, // Shelf 2
+        500, // Shelf 3
+        500, // Shelf 4
+        500, // Shelf 5
+        500, // Shelf 6
+        500, // Shelf 7
+        500  // Shelf 8
+    };
     
 
     //------------------------------
@@ -44,3 +65,5 @@ namespace config {
 
 
 }
+
+#endif

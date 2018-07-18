@@ -3,6 +3,7 @@
 #include <Servo.h>
 
 #include "config.h"
+#include "utils.h"
 
 
 SoftwareSerial coinSerial(config::coinRX, config::coinTX);
@@ -16,6 +17,13 @@ const int coinServoPin = config::coinServoPin;
 
 // Servo instance to control servo motor that controls coin rocker
 Servo coinServo;
+
+// The current state of the vending mashine
+config::State state = config::State::IDLE;
+
+// The currently selected honey shelf
+int selectedShelf = config::NO_SHELF;
+int leftToPay = 0;
 
 /**
  * Sets up all variables for the program
@@ -74,8 +82,6 @@ void moveCoinServo(config::ServoRotations rotation) {
 }
 
 int getButtonPressed() {
-    int tmpButtonState = 0;
-    int pressedButton = 0;
     
     // Check reset Button pressed
     if (digitalRead(buttonResetPin)) {
@@ -86,6 +92,10 @@ int getButtonPressed() {
         return config::BUTTON_ABORT;
     }
 
+    if (state != config::State::IDLE) {
+        return config::NO_BUTTON_PRESSED;
+    }
+
     // set latch to LOW to collect parallel data
     digitalWrite(latchPin, LOW);
     // Wait for data to get collected
@@ -93,20 +103,12 @@ int getButtonPressed() {
     // Set latch to HIGH to transmit data serially
     digitalWrite(latchPin, HIGH);
 
-    // Loop over all door buttons. Register transmits information about pins from pin 7 to
-    // pin 0. So the loop counts down
-    for (int i = config::doorNumbers - 1; i >=0; i--) {
-        // A low to high clock drop causes the shift register's data pin to change state based
-        // on value of the next bit in its serial information flow
-        digitalWrite(clockPin, LOW);
-        delayMicroseconds(0.2);
-        tmpButtonState = digitalRead(dataPinButtons);
-        if (tmpButtonState) {
-            // At this point, a door button was pressed
-            pressedButton |= (1 << i);
-            return i; // pressedButton is binary representation
+    uint8_t bitFieldButtonPressed = utils::shiftIn(dataPinButtons, clockPin);
+    
+    for (int i = 0; i < config::shelfCount; i++) {
+        if (bitFieldButtonPressed & (1 << i)) {
+            return i + 1;
         }
-        digitalWrite(clockPin, HIGH);
     }
     return config::NO_BUTTON_PRESSED;
 }
@@ -135,19 +137,50 @@ int getInsertedCoin() {
     return config::NO_COIN;
 }
 
-
+/**
+ * Resets the complete mashine 
+ */
+void resetMashine() {
+    state = config::State::IDLE;
+    selectedShelf = config::NO_SHELF;
+}
 
 /**
  * Main loop routine
  */
 void loop() {
     // Add a delay between each loop of 1/10th of a second to give the system some downtime
-    delay(100);
+    delay(500);
+    
     // First of all, get if a button is pressed
     int pressedButton = getButtonPressed();
-    if (pressedButton == config::NO_BUTTON_PRESSED) {
-        return;
+    Serial.print("Button:");
+    Serial.println(pressedButton);
+
+    // Switch over state to execute state specific operations
+    switch (state) {
+        case config::State::IDLE:
+            // If in Idle state no button is pressed, the mashine gets no new task
+            if (pressedButton == config::NO_BUTTON_PRESSED) {
+                return;
+            }
+            if (pressedButton == config::BUTTON_RESET) {
+                resetMashine();
+                return;
+            }
+            if (pressedButton == config::BUTTON_ABORT) {
+                state = config::State::ABORTING;
+                return;
+            }
+            selectedShelf = pressedButton;
+            leftToPay = config::shelfPrices[selectedShelf];
+            state = config::State::PAYING;
+            break;
+        case config::State::PAYING:
+            // TODO
+            break;
     }
+    
 
     // Handle button reset and abort with special treatment
     if (pressedButton == 1) {
