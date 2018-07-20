@@ -7,7 +7,7 @@ namespace config {
     const int NO_COIN=255;
 
     // All states of the vending mashine
-    enum State {IDLE, PAYING, ABORTING};
+    enum State {IDLE, COLLECTING, PAYED, ABORTING};
 
     // Number of Doors
     const int shelfCount = 8;

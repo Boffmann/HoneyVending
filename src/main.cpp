@@ -25,7 +25,11 @@ config::State state = config::State::IDLE;
 
 // The currently selected honey shelf
 int selectedShelf = config::NO_SHELF;
-int leftToPay = 0;
+int leftToPay = 500;
+
+// Array representing if shelf at position is filled or not
+bool shelfFilled[config::shelfCount];
+
 
 /**
  * Sets up all variables for the program
@@ -55,6 +59,11 @@ void setup() {
 
     //Debug purpose only
     pinMode(13, OUTPUT);
+
+    // Init with all shelfs filled
+    for(int i = 0; i < config::shelfCount; ++i) {
+        shelfFilled[i] = true;
+    }
 }
 
 /**
@@ -90,9 +99,22 @@ void moveCoinServo(config::ServoRotations rotation) {
 /**
  * Shows a digit on the display
  * @param value the digit to show
- * @param fillZeros true if not used fields on display should view 0, false otherwise
+ * @param strangeMode there is something strange happening when passing integer
+ * variables in this method. The divisor is 9 instead of 10???
+ * Only happens when somewhere in code this integer changes.
+ * When this functions shows something weird, try strangeMode off
  */
-void display(int value, bool fillZeros = false) {
+void display(int value, bool strangeMode = true) {
+
+    int strangeAdd = 0;
+    if (strangeMode) {
+        strangeAdd = 1;
+    }
+
+    // Do not display values that are less than zero
+    if (value < 0) {
+        value = 0;
+    }
 
     int numDigits = utils::countNumberOfDigits(value);
 
@@ -102,21 +124,26 @@ void display(int value, bool fillZeros = false) {
         Serial.println(value);
         return;
     }
-    int divisor = static_cast<int>(pow(10, numDigits - 1));
+
+    // This does some very strange behaviour. That is why +1 at the end
+    int divisor = static_cast<int>(pow(10, numDigits - 1)) + strangeAdd;
     
     // Activate points on display
     segmentDisplay.point(POINT_ON);
 
-    if (fillZeros) {
-        // Display 0 on those parts that do not display anything else
-        for (int i = 0; i < config::MAX_DISPLAY_FIELDS - numDigits; ++i) {
-            segmentDisplay.display(i, 0);
-        }
+    // Display 0 on those parts that do not display anything else to always keep 3 digit lighten up
+    for (int i = 1; i < config::MAX_DISPLAY_FIELDS - numDigits; ++i) {
+        segmentDisplay.display(i, 0);
     }
 
     // Get every single digit out of value and display it at proper part of segment display
-    for( int i = 0; i < config::MAX_DISPLAY_FIELDS; i++) {
+    for( int i = 0; i < numDigits; i++) {
         segmentDisplay.display(config::MAX_DISPLAY_FIELDS - numDigits + i, value / divisor);
+        /*Serial.print("value: ");
+        Serial.println(value);
+        Serial.print("Divisor: ");
+        Serial.println(divisor);
+        Serial.println(value / divisor);*/
         value = value % divisor;
         divisor = divisor / 10;
     }
@@ -137,7 +164,8 @@ int getButtonPressed() {
         return config::BUTTON_ABORT;
     }
 
-    if (state != config::State::IDLE) {
+    // Do not allow to get a honey button pressed when this is not allowed
+    if (state != config::State::PAYED) {
         return config::NO_BUTTON_PRESSED;
     }
 
@@ -186,8 +214,13 @@ int getInsertedCoin() {
  * Resets the complete mashine 
  */
 void resetMashine() {
-    state = config::State::IDLE;
+    state = config::State::COLLECTING;
     selectedShelf = config::NO_SHELF;
+
+    // Reset all shelfs to filled
+    for(int i = 0; i < config::shelfCount; ++i) {
+        shelfFilled[i] = true;
+    }
 }
 
 /**
