@@ -12,10 +12,11 @@ const int buttonResetPin = config::buttonResetPin;
 const int buttonAbortPin = config::buttonAbortPin;
 const int latchPin = config::latchPin;
 const int clockPin = config::clockPin;
-const int dataPinOutput = config::dataPinOutput;
+const int dataPinDoor = config::dataPinDoor;
+const int dataPinDisplay = config::dataPinDisplay;
 const int dataPinInput = config::dataPinInput;
 const int coinServoPin = config::coinServoPin;
-TM1637 segmentDisplay(clockPin, dataPinOutput);
+TM1637 segmentDisplay(clockPin, dataPinDisplay);
 
 // Servo instance to control servo motor that controls coin rocker
 Servo coinServo;
@@ -54,8 +55,10 @@ void setup() {
     pinMode(buttonAbortPin, INPUT);
     pinMode(latchPin, OUTPUT);
     pinMode(clockPin, OUTPUT);
-    pinMode(dataPinOutput, OUTPUT);
+    pinMode(dataPinDoor, OUTPUT);
+    pinMode(dataPinDisplay, OUTPUT);
     pinMode(dataPinInput, INPUT);
+    pinMode(coinServoPin, OUTPUT);
 
     //Debug purpose only
     pinMode(13, OUTPUT);
@@ -80,7 +83,7 @@ void doorWrite(int door, int doorState) {
    bitWrite(bitsToSend, doorNumber, doorState);
 
    // Shift out the bits to open/close door
-   shiftOut(dataPinOutput, clockPin, MSBFIRST, bitsToSend);
+   shiftOut(dataPinDoor, clockPin, MSBFIRST, bitsToSend);
 }
 
 /**

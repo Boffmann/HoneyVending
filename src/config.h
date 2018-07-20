@@ -41,17 +41,19 @@ namespace config {
     //------------------------------
     // Pin numbers
     // rxPin, txPin for coinAcceptor
-    const int coinRX = 4, coinTX = 5;
+    const int coinRX = 3, coinTX = 4;
     // The pin to get reset Button pressed
-    const int buttonResetPin = 6;
+    const int buttonResetPin = 5;
     // The pin to get abort button pressed
-    const int buttonAbortPin = 7;
+    const int buttonAbortPin = 6;
     // The latch pin for shift registers
-    const int latchPin = 8;
+    const int latchPin = 7;
     // The clockPin for shift registers
-    const int clockPin = 9;
+    const int clockPin = 8;
     // The dataPin for door shift register
-    const int dataPinOutput = 10;
+    const int dataPinDoor = 9;
+    // The dataPin for segment display
+    const int dataPinDisplay = 10;
     // The dataPin for buttons shift register
     const int dataPinInput = 11;
     // The servoPin to control the coinServo
