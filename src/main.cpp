@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <Servo.h>
+#include "TM1637.h"
 
 #include "config.h"
+#include "utils.h"
 
 
 SoftwareSerial coinSerial(config::coinRX, config::coinTX);
@@ -10,9 +12,10 @@ const int buttonResetPin = config::buttonResetPin;
 const int buttonAbortPin = config::buttonAbortPin;
 const int latchPin = config::latchPin;
 const int clockPin = config::clockPin;
-const int dataPinDoor = config::dataPinDoor;
-const int dataPinButtons = config::dataPinButtons;
+const int dataPinOutput = config::dataPinOutput;
+const int dataPinInput = config::dataPinInput;
 const int coinServoPin = config::coinServoPin;
+TM1637 segmentDisplay(clockPin, dataPinOutput);
 
 // Servo instance to control servo motor that controls coin rocker
 Servo coinServo;
@@ -38,13 +41,17 @@ void setup() {
     // Attaches servo connected to coinServoPin to the servo object
     coinServo.attach(coinServoPin);
 
+    // Initialize 7-segment-display and set its brightness
+    segmentDisplay.init();
+    segmentDisplay.set(BRIGHT_TYPICAL);
+
     // Set PinModes for each individual Pin
     pinMode(buttonResetPin, INPUT);
     pinMode(buttonAbortPin, INPUT);
     pinMode(latchPin, OUTPUT);
     pinMode(clockPin, OUTPUT);
-    pinMode(dataPinDoor, OUTPUT);
-    pinMode(dataPinButtons, INPUT);
+    pinMode(dataPinOutput, OUTPUT);
+    pinMode(dataPinInput, INPUT);
 
     //Debug purpose only
     pinMode(13, OUTPUT);
@@ -64,7 +71,7 @@ void doorWrite(int door, int doorState) {
    bitWrite(bitsToSend, doorNumber, doorState);
 
    // Shift out the bits to open/close door
-   shiftOut(dataPinDoor, clockPin, MSBFIRST, bitsToSend);
+   shiftOut(dataPinOutput, clockPin, MSBFIRST, bitsToSend);
 }
 
 /**
@@ -80,6 +87,45 @@ void moveCoinServo(config::ServoRotations rotation) {
     delay(50);
 }
 
+/**
+ * Shows a digit on the display
+ * @param value the digit to show
+ * @param fillZeros true if not used fields on display should view 0, false otherwise
+ */
+void display(int value, bool fillZeros = false) {
+
+    int numDigits = utils::countNumberOfDigits(value);
+
+    // If value is bigger than the display can view, return
+    if (numDigits > config::MAX_DISPLAY_FIELDS) {
+        Serial.print("Number of digits is to high. Value was: ");
+        Serial.println(value);
+        return;
+    }
+    int divisor = static_cast<int>(pow(10, numDigits - 1));
+    
+    // Activate points on display
+    segmentDisplay.point(POINT_ON);
+
+    if (fillZeros) {
+        // Display 0 on those parts that do not display anything else
+        for (int i = 0; i < config::MAX_DISPLAY_FIELDS - numDigits; ++i) {
+            segmentDisplay.display(i, 0);
+        }
+    }
+
+    // Get every single digit out of value and display it at proper part of segment display
+    for( int i = 0; i < config::MAX_DISPLAY_FIELDS; i++) {
+        segmentDisplay.display(config::MAX_DISPLAY_FIELDS - numDigits + i, value / divisor);
+        value = value % divisor;
+        divisor = divisor / 10;
+    }
+}
+
+/**
+ * Determines the pressed button
+ * @return button Code of the pressed button
+ */
 int getButtonPressed() {
     
     // Check reset Button pressed
@@ -102,7 +148,7 @@ int getButtonPressed() {
     // Set latch to HIGH to transmit data serially
     digitalWrite(latchPin, HIGH);
 
-    uint8_t bitFieldButtonPressed = shiftIn(dataPinButtons, clockPin, MSBFIRST);
+    uint8_t bitFieldButtonPressed = shiftIn(dataPinInput, clockPin, MSBFIRST);
     
     for (int i = 0; i < config::shelfCount; i++) {
         if (bitFieldButtonPressed & (1 << i)) {
@@ -176,7 +222,7 @@ void loop() {
             state = config::State::PAYING;
             break;
         case config::State::PAYING:
-            // TODO
+            display(leftToPay, false);
             break;
     }
     

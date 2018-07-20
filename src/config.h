@@ -22,6 +22,9 @@ namespace config {
     // Shelf Values
     const int NO_SHELF = -1;
 
+    // Maximal Display Fields
+    const int MAX_DISPLAY_FIELDS = 4;
+
     // Prices for each shelf
     const int shelfPrices[shelfCount] = {
         500, // Shelf 1
@@ -48,9 +51,9 @@ namespace config {
     // The clockPin for shift registers
     const int clockPin = 9;
     // The dataPin for door shift register
-    const int dataPinDoor = 10;
+    const int dataPinOutput = 10;
     // The dataPin for buttons shift register
-    const int dataPinButtons = 11;
+    const int dataPinInput = 11;
     // The servoPin to control the coinServo
     const int coinServoPin = 12;
     //------------------------------

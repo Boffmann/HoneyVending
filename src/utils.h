@@ -4,12 +4,13 @@
 #include <Arduino.h>
 #include "config.h"
 namespace utils {
+    
     /**
-     * Shifts in data from a PISO shift register
-     * @param dataPin the dataPin where the load pin from PISO SR is connected to
-     * @param clockPin the clockPin where the clock pin from PISO SR is connected to 
+     * Counts the digits of a number
+     * @param i the number to count the digits from
+     * @ return number of digits of i
      */
-    byte shiftIn(const int dataPin, const int clockPin);
+    int countNumberOfDigits(int i);
 }
 
 #endif
