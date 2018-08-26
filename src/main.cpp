@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <Servo.h>
-#include "TM1637.h"
+#include <TM1637.h>
 
 #include "config.h"
 #include "utils.h"
@@ -255,9 +255,9 @@ void loop() {
             }
             selectedShelf = pressedButton;
             leftToPay = config::shelfPrices[selectedShelf];
-            state = config::State::PAYING;
+            state = config::State::COLLECTING;
             break;
-        case config::State::PAYING:
+        case config::State::COLLECTING:
             display(leftToPay, false);
             break;
     }
