@@ -10,6 +10,7 @@
 SoftwareSerial coinSerial(config::coinRX, config::coinTX);
 const int buttonResetPin = config::buttonResetPin;
 const int buttonAbortPin = config::buttonAbortPin;
+const int enablePin = config::enablePin;
 const int latchPin = config::latchPin;
 const int clockPin = config::clockPin;
 const int dataPinDoor = config::dataPinDoor;
@@ -53,6 +54,7 @@ void setup() {
     // Set PinModes for each individual Pin
     pinMode(buttonResetPin, INPUT);
     pinMode(buttonAbortPin, INPUT);
+    pinMode(enablePin, OUTPUT);
     pinMode(latchPin, OUTPUT);
     pinMode(clockPin, OUTPUT);
     pinMode(dataPinDoor, OUTPUT);
@@ -163,14 +165,14 @@ int getButtonPressed() {
         return config::BUTTON_RESET;
     }
     //Check abort button pressed
-    if (digitalRead(buttonAbortPin)){
+    /*if (digitalRead(buttonAbortPin)){
         return config::BUTTON_ABORT;
-    }
+    }*/
 
     // Do not allow to get a honey button pressed when this is not allowed
-    if (state != config::State::PAYED) {
+    /*if (state != config::State::PAYED) {
         return config::NO_BUTTON_PRESSED;
-    }
+    }*/
 
     // set latch to LOW to collect parallel data
     digitalWrite(latchPin, LOW);
@@ -179,7 +181,11 @@ int getButtonPressed() {
     // Set latch to HIGH to transmit data serially
     digitalWrite(latchPin, HIGH);
 
+    digitalWrite(clockPin, HIGH);
+    // Set shift register in enable mode (active low)
+    digitalWrite(enablePin, LOW);
     uint8_t bitFieldButtonPressed = shiftIn(dataPinInput, clockPin, MSBFIRST);
+    digitalWrite(enablePin, HIGH);
     
     for (int i = 0; i < config::shelfCount; i++) {
         if (bitFieldButtonPressed & (1 << i)) {
@@ -237,6 +243,7 @@ void loop() {
     int pressedButton = getButtonPressed();
     Serial.print("Button:");
     Serial.println(pressedButton);
+    return;
 
     // Switch over state to execute state specific operations
     switch (state) {

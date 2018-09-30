@@ -41,11 +41,13 @@ namespace config {
     //------------------------------
     // Pin numbers
     // rxPin, txPin for coinAcceptor
-    const int coinRX = 3, coinTX = 4;
+    const int coinRX = 2, coinTX = 3;
     // The pin to get reset Button pressed
-    const int buttonResetPin = 5;
+    const int buttonResetPin = 4;
     // The pin to get abort button pressed
-    const int buttonAbortPin = 6;
+    const int buttonAbortPin = 5;
+    // The enable pin for button shift register
+    const int enablePin = 6;
     // The latch pin for shift registers
     const int latchPin = 7;
     // The clockPin for shift registers
