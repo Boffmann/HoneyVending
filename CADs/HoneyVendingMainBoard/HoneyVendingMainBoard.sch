@@ -489,7 +489,7 @@ F 3 "" H 8100 3950 50  0001 C CNN
 	1    8100 3950
 	1    0    0    -1  
 $EndComp
-Text Notes 3550 3500 0    50   ~ 0
+Text Notes 3550 3450 0    50   ~ 0
 Pins 2 and 3 are \ncapable of interrupts
 $Comp
 L Device:C 100nF1
@@ -962,11 +962,7 @@ Wire Wire Line
 Wire Wire Line
 	4350 3700 5100 3700
 Wire Wire Line
-	4350 3600 5100 3600
-Wire Wire Line
 	4350 3800 5100 3800
-Wire Wire Line
-	4350 3900 5100 3900
 Wire Wire Line
 	4350 4000 5100 4000
 Wire Wire Line
@@ -981,13 +977,13 @@ Wire Wire Line
 	4350 4500 5100 4500
 Wire Wire Line
 	4350 4600 5100 4600
-Text Label 4350 3600 0    50   ~ 0
+Text Label 4000 3600 0    50   ~ 0
 CoinSerial
 Text Label 4350 3700 0    50   ~ 0
 PISO_SL
 Text Label 4350 3800 0    50   ~ 0
 PISOClock
-Text Label 4350 3900 0    50   ~ 0
+Text Label 3650 3900 0    50   ~ 0
 PISOOutput
 Text Label 4350 4000 0    50   ~ 0
 segmentSignal
@@ -1065,4 +1061,70 @@ Text Label 7150 2700 0    50   ~ 0
 PISOClock
 Text Notes 4450 4650 0    20   ~ 0
 Pin 13 reserviert für Coin TX
+Wire Wire Line
+	4000 3600 4500 3600
+$Comp
+L Device:R 10kOhm?
+U 1 1 5E8354F3
+P 4300 3050
+F 0 "10kOhm?" V 4093 3050 50  0000 C CNN
+F 1 "R" V 4184 3050 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4230 3050 50  0001 C CNN
+F 3 "~" H 4300 3050 50  0001 C CNN
+	1    4300 3050
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5E835551
+P 4000 3050
+F 0 "#PWR?" H 4000 2800 50  0001 C CNN
+F 1 "GND" H 4005 2877 50  0000 C CNN
+F 2 "" H 4000 3050 50  0001 C CNN
+F 3 "" H 4000 3050 50  0001 C CNN
+	1    4000 3050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4150 3050 4000 3050
+Wire Wire Line
+	4450 3050 4500 3050
+Wire Wire Line
+	4500 3050 4500 3600
+Connection ~ 4500 3600
+Wire Wire Line
+	4500 3600 5100 3600
+$Comp
+L Device:R 10kOhm?
+U 1 1 5E8476D8
+P 3700 3700
+F 0 "10kOhm?" V 3493 3700 50  0000 C CNN
+F 1 "R" V 3584 3700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3630 3700 50  0001 C CNN
+F 3 "~" H 3700 3700 50  0001 C CNN
+	1    3700 3700
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5E847732
+P 3450 3700
+F 0 "#PWR?" H 3450 3450 50  0001 C CNN
+F 1 "GND" H 3455 3527 50  0000 C CNN
+F 2 "" H 3450 3700 50  0001 C CNN
+F 3 "" H 3450 3700 50  0001 C CNN
+	1    3450 3700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3650 3900 4200 3900
+Wire Wire Line
+	3850 3700 4200 3700
+Wire Wire Line
+	4200 3700 4200 3900
+Connection ~ 4200 3900
+Wire Wire Line
+	4200 3900 5100 3900
+Wire Wire Line
+	3550 3700 3450 3700
 $EndSCHEMATC
