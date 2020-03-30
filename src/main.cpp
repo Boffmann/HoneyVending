@@ -4,8 +4,13 @@
 #include "config.h"
 #include "CoinSerial.h"
 
-volatile boolean running = false;
+boolean running = false;
+volatile boolean reset = false;
+uint8_t pressed_button = 0;
 CoinSerial coin_serial(config::coin_rx, config::coin_tx);
+74HC165 button_shift_register(config::button_shift_load,
+                              config::button_clock,
+                              config::button_output);
 
 void setup() {
     // Set pin modes
@@ -33,15 +38,24 @@ void setup() {
  * serial to make it wake up
  */
 void goodnight_arduino() {
-    // Enable sleep mode
+    set_sleep_mode(SLEEP_MODE_IDLE);
     sleep_enable();
-    // Attach coin input interrupt to wakeup. Wakeup on pin change
-    attachInterrupt(config::coin_rx_interrupt, coin_inserted_isr, CHANGE);
-    // Go to full sleep
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-    // Give some time before going to sleep
-    delay(100);
-    sleep_cpu()
+
+    // Disable everything but usart to get inserted coins
+    power_adc_disable();
+    power_spi_disable();
+    power_timer0_disable();
+    power_timer1_disable();
+    power_timer2_disable();
+    power_twi_disable();
+
+    // Now put device actually to sleep
+    sleep_mode();
+
+    // PROGRAM CONTINUES FROM HERE AFTER WAKING UP
+    sleep_disable();
+
+    power_all_enable();
 }
 
 void loop() {
@@ -49,18 +63,21 @@ void loop() {
     delay(3000);
     // Go to sleep and wait for coin to be inserted
     goodnight_arduino();
+
+    // Run after waking up
+    if (reset) {
+        // TODO
+    } else {
+        running = true;
+    }
     
     while (running) {
-
+        coin_serial.update();
+        pressed_button = button_shift_register.get_input();
     }
 
 }
 
 void reset_isr() {
-    // TODO
-}
-
-void wakeUp() {
-
-    running = true;
+    reset = true;
 }
