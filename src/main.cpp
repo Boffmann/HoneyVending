@@ -7,7 +7,8 @@
 boolean running = false;
 volatile boolean reset = false;
 uint8_t pressed_button = 0;
-CoinSerial coin_serial(config::coin_rx, config::coin_tx);
+Serial serial_coin_connection(config::coin_rx, config::coin_tx);
+CoinSerial coin_serial(std::make_unique(serial_coin_connection));
 74HC165 button_shift_register(config::button_shift_load,
                               config::button_clock,
                               config::button_output);
