@@ -22,7 +22,7 @@ class Shift74HC165 {
      * 
      * @return The Shift registers value on its input pins
      */
-    const uint8_t get_input() const;
+    const uint8_t get_input(void) const;
 
   private:
     const uint8_t _shift_load_pin;

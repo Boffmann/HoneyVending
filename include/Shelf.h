@@ -23,7 +23,7 @@ class Shelf {
      * @param door_shift_register The shift register to control the door locks
      */
     Shelf(const Shift74HC595* const door_shift_register);
-    ~Shelf();
+    ~Shelf(void);
 
     /**
      * Set a price for a specific shelf

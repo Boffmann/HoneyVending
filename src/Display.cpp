@@ -4,7 +4,7 @@
 Display::Display(const uint8_t clock_pin, const uint8_t data_pin) 
   : _segment_display(clock_pin, data_pin) {}
 
-void Display::init() {
+void Display::init(void) {
   _segment_display.init();
   _segment_display.point(POINT_ON);
 }

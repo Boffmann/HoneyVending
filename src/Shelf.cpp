@@ -12,7 +12,7 @@ Shelf::Shelf(const Shift74HC595* const door_shift_register)
 
 }
 
-Shelf::~Shelf() {
+Shelf::~Shelf(void) {
 
   delete _door_shift_register;
 

@@ -25,22 +25,22 @@ void Shift74HC595::write_out(const uint8_t message) const {
   digitalWrite(_storage_register_clock_pin, HIGH);
 }
 
-void Shift74HC595::clear_shift_register() const {
+void Shift74HC595::clear_shift_register(void) const {
   // Clear the register by writing 0 to it
 
   write_out(0);
 }
 
-void Shift74HC595::enable_output() const {
+void Shift74HC595::enable_output(void) const {
   // Output enable pin is active low
   digitalWrite(_output_enable_pin, LOW);
 }
 
-void Shift74HC595::disable_output() const {
+void Shift74HC595::disable_output(void) const {
   digitalWrite(_output_enable_pin, HIGH);
 }
 
-void Shift74HC595::write_shift_to_storage_register() const {
+void Shift74HC595::write_shift_to_storage_register(void) const {
   digitalWrite(_storage_register_clock_pin, LOW);
   delay(40);
   digitalWrite(_storage_register_clock_pin, HIGH);

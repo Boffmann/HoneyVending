@@ -3,14 +3,14 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-CoinSerial::CoinSerial()
+CoinSerial::CoinSerial(void)
   : _current_coin_count{0} {}
 
 void CoinSerial::begin(const uint32_t baud_rate) const {
   Serial.begin(baud_rate);
 }
 
-void CoinSerial::update() {
+void CoinSerial::update(void) {
   int coinValue;
 
   if (Serial.available()) {
@@ -22,10 +22,10 @@ void CoinSerial::update() {
   }
 }
 
-void CoinSerial::reset_coin_count() {
+void CoinSerial::reset_coin_count(void) {
   _current_coin_count = 0;
 }
 
-uint16_t CoinSerial::get_current_coin_count() const {
+uint16_t CoinSerial::get_current_coin_count(void) const {
   return _current_coin_count;
 }

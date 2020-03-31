@@ -21,7 +21,7 @@ class Display {
     /**
      * Initialize the display
      */
-    void init();
+    void init(void);
 
     /**
      * Set the display's brightness

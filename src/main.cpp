@@ -16,11 +16,12 @@ Shift74HC165 button_shift_register(config::button_shift_load,
                               config::button_clock,
                               config::button_output);
 
-//const Shift74HC595* const door_shift_register = new Shift74HC595(config::door_shift_register_clock, config::door_storage_register_clock,
-//                                                     config::door_output, config::door_output_enable);
-const Shift74HC595* const door_shift_register = new Shift74HC595(config::door_shift_register_clock, config::door_storage_register_clock,
-                                                     config::door_output, config::door_output_enable);
-Shelf shelf(door_shift_register);
+Shelf shelf(
+            new Shift74HC595(config::door_shift_register_clock, 
+                             config::door_storage_register_clock,
+                             config::door_output,
+                             config::door_output_enable)
+);
 
 void reset_isr() {
     reset = true;

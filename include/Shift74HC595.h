@@ -20,23 +20,23 @@ class Shift74HC595 {
      * Clears the data in the shift register. Note that this does not propagate
      * the data into the storage register
      */
-    void clear_shift_register() const;
+    void clear_shift_register(void) const;
 
     /**
      * Enable the output pins. This sets the output pins to the data in the
      * storage register
      */
-    void enable_output() const;
+    void enable_output(void) const;
 
     /**
      * Disables the output pins.
      */
-    void disable_output() const;
+    void disable_output(void) const;
 
     /**
      * Manually write the data in the shift register into the storage register
      */
-    void write_shift_to_storage_register() const;
+    void write_shift_to_storage_register(void) const;
 
 
   private:
