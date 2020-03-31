@@ -1,7 +1,7 @@
 #ifndef _SIPO_SHIFT_H_
 #define _SIPO_SHIFT_H_
 
-#include <cstdint>
+#include <stdint.h>
 
 class SIPO {
 
@@ -11,7 +11,7 @@ class SIPO {
 
     virtual void write_out(const uint8_t message) const = 0;
 
-  private:
+  protected:
     const uint8_t _shift_register_clock_pin;
     const uint8_t _storage_register_clock_pin;
     const uint8_t _serial_input_pin;

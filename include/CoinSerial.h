@@ -1,23 +1,24 @@
 #ifndef _COIN_SERIAL_H_
 #define _COIN_SERIAL_H_
 
-#include <memory.h>
+#include <Arduino.h>
+#include <SoftwareSerial.h>
 
-#include "SerialWrapper.h"
+#include <stdint.h>
 
 const uint16_t NO_COIN = 255;
 
 class CoinSerial {
 
   public:
-    CoinSerial(const std::unique_ptr<SerialWrapper> serial);
+    CoinSerial();
 
     /**
      * Begin serial transmission
      *
      * @param baud_rate The baud rate for this serial transmission
      */
-    void begin(const uint32_t baud_rate);
+    void begin(const uint32_t baud_rate) const;
 
     /**
      * Reads Serial Input from Coin Acceptor and adds value to _current_coin_count
@@ -38,8 +39,7 @@ class CoinSerial {
 
   private:
       uint16_t _current_coin_count;
-      SerialWrapper _serial;
-
+      
 };
 
 #endif

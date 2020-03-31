@@ -1,8 +1,7 @@
 #include "Display.h"
 
-Display::Display(const uint8_t clock_pin, const uint8_t data_pin) {
-  _segment_display = TM1637(clock_pin, data_pin);
-}
+Display::Display(const uint8_t clock_pin, const uint8_t data_pin) 
+  : _segment_display(clock_pin, data_pin) {}
 
 void Display::init() {
   _segment_display.init();
@@ -13,7 +12,8 @@ void Display::set_brightness(const uint8_t brightness) {
   _segment_display.set(brightness);
 }
 
-void Display::show(const uint16_t number) {
+void Display::show(uint16_t number) {
+
 
   if (number < 0) {
     number = 0;
@@ -23,7 +23,7 @@ void Display::show(const uint16_t number) {
     number = 9999;
   }
 
-  const uint8_t number_of_digits = _get_number_of_digits(number);
+  uint8_t number_of_digits = _get_number_of_digits(number);
 
   // This display can only show four digits
   if (number_of_digits > _max_number_of_digits) {
@@ -50,7 +50,7 @@ uint8_t Display::_get_number_of_digits(uint16_t number) {
   uint8_t result = 0;
 
   while (number != 0) {
-    i /= 10;
+    number /= 10;
     ++result;
   }
 
@@ -67,5 +67,7 @@ uint8_t Display::_get_digit(const uint16_t number, const uint8_t digit) {
       return number / 10 % 10;
     case 3:
       return number % 10;
+    default:
+      return 8;
   }
 }

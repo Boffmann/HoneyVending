@@ -3,21 +3,18 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-CoinSerial::CoinSerial(const std::unique_ptr<SerialWrapper> serial)
-  : _current_coin_count{0},
-    _serial{std::move(serial)} {
-      _software_serial.begin(boud_rate);
-    }
+CoinSerial::CoinSerial()
+  : _current_coin_count{0} {}
 
-CoinSerial::begin() {
-  _serial->begin();
+void CoinSerial::begin(const uint32_t baud_rate) const {
+  Serial.begin(baud_rate);
 }
 
-CoinSerial::update() {
+void CoinSerial::update() {
   int coinValue;
 
-  if (_serial->available()) {
-    coinValue = _serial->read();
+  if (Serial.available()) {
+    coinValue = Serial.read();
 
     if (coinValue != NO_COIN) {
       _current_coin_count += coinValue;
@@ -25,10 +22,10 @@ CoinSerial::update() {
   }
 }
 
-CoinSerial::reset_coin_count() {
+void CoinSerial::reset_coin_count() {
   _current_coin_count = 0;
 }
 
-CoinSerial::get_current_coin_count() const {
+uint16_t CoinSerial::get_current_coin_count() const {
   return _current_coin_count;
 }

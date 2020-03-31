@@ -1,21 +1,24 @@
 #ifndef _HONEY_VENDING_SHELFS_H_
 #define _HONEY_VENDING_SHELFS_H_
 
-#include <vector>
+#include <stdint.h>
 
-#include "74HC595.h"
+#include "Shift74HC595.h"
+#include "config.h"
 
-const uint8_t Shelf1 = 0,
-const uint8_t Shelf2 = 1,
-const uint8_t Shelf3 = 2,
-const uint8_t Shelf4 = 3,
-const uint8_t Shelf5 = 4,
+const uint8_t Shelf1 = 0;
+const uint8_t Shelf2 = 1;
+const uint8_t Shelf3 = 2;
+const uint8_t Shelf4 = 3;
+const uint8_t Shelf5 = 4;
 const uint8_t Shelf6 = 5;
 
-class Shelfs {
+class Shelf {
 
   public:
-    Shelfs(const uint8_t shelf_count, std::unique_ptr<74HC595> door_shift_register);
+    //Shelfs(const Shift74HC595* const door_shift_register);
+    Shelf(const Shift74HC595* const door_shift_register);
+    ~Shelf();
 
     /**
      * Set a price for a specific shelf
@@ -33,13 +36,15 @@ class Shelfs {
      * @param money the amount of money to buy the shelf with
      * @return true if buying the shelf was successful, false otherwise
      */
-    boolean buy_shelf(const uint8_t shelf_number, const uint16_t money);
+    bool buy_shelf(const uint8_t shelf_number, const uint16_t money);
 
   private:
-    const uint8_t _shelf_count;
-    std::vector<uint16_t> _shelf_prices;
-    std::vector<boolean> _is_shelf_full;
-    std::unique_ptr<74HC595> _door_shift_register;
+    uint16_t _shelf_prices[config::SHELF_COUNT];
+    bool _is_shelf_full[config::SHELF_COUNT];
+    //const Shift74HC595* const _door_shift_register;
+    const Shift74HC595* const _door_shift_register;
+
+    Shelf& operator=(const Shelf& other);
 };
 
 #endif

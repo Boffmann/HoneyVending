@@ -28,7 +28,7 @@ class Display {
      *
      * @param number The number to show
      */
-    void show(const uint16_t number);
+    void show(uint16_t number);
 
   private:
     TM1637 _segment_display;

@@ -1,25 +1,34 @@
 #include "Shelf.h"
 
-Shelfs::Shelfs(const uint8_t shelf_count, std::unique_ptr<74HC595> door_shift_register)
-  : _shelf_count{shelf_count},
-    _door_shift_register(std::move(door_shift_register)) {
+#include <Arduino.h>
 
-    _shelf_prices = std::vector<uint16_t>(_shelf_count, 0);
-    _is_shelf_full = std::vector<boolean>(_shelf_count, true);
+Shelf::Shelf(const Shift74HC595* const door_shift_register)
+  :  _door_shift_register{door_shift_register} {
 
-  }
+    for (uint8_t shelf_index = 0; shelf_index < config::SHELF_COUNT; ++shelf_index) {
+      _shelf_prices[shelf_index] = 0;
+      _is_shelf_full[shelf_index] = true;
+    }
 
-void Shelfs::set_shelf_price(const uint8_t shelf_number, const uint8_t shelf_price) {
+}
 
-  if (shelf_number < _shelf_count) {
+Shelf::~Shelf() {
+
+  delete _door_shift_register;
+
+}
+
+void Shelf::set_shelf_price(const uint8_t shelf_number, const uint16_t shelf_price) {
+
+  if (shelf_number < config::SHELF_COUNT) {
     _shelf_prices[shelf_number] = shelf_price;
   }
 
 }
 
-boolean Shelfs::buy_shelf(const uint8_t shelf_number, const uint16_t money) {
+bool Shelf::buy_shelf(const uint8_t shelf_number, const uint16_t money) {
 
-  if (!shelf_number < _shelf_count) {
+  if (!(shelf_number < config::SHELF_COUNT)) {
     return false;
   }
 

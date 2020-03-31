@@ -1,17 +1,30 @@
 #include <Arduino.h>
-#include<avr/sleep.h>
+#include <avr/sleep.h>
+#include <avr/power.h>
 
 #include "config.h"
 #include "CoinSerial.h"
+#include "Shift74HC165.h"
+#include "Shift74HC595.h"
+#include "Shelf.h"
 
 boolean running = false;
 volatile boolean reset = false;
 uint8_t pressed_button = 0;
-Serial serial_coin_connection(config::coin_rx, config::coin_tx);
-CoinSerial coin_serial(std::make_unique(serial_coin_connection));
-74HC165 button_shift_register(config::button_shift_load,
+CoinSerial coin_serial;
+Shift74HC165 button_shift_register(config::button_shift_load,
                               config::button_clock,
                               config::button_output);
+
+//const Shift74HC595* const door_shift_register = new Shift74HC595(config::door_shift_register_clock, config::door_storage_register_clock,
+//                                                     config::door_output, config::door_output_enable);
+const Shift74HC595* const door_shift_register = new Shift74HC595(config::door_shift_register_clock, config::door_storage_register_clock,
+                                                     config::door_output, config::door_output_enable);
+Shelf shelf(door_shift_register);
+
+void reset_isr() {
+    reset = true;
+}
 
 void setup() {
     // Set pin modes
@@ -28,7 +41,7 @@ void setup() {
     pinMode(config::door_output_enable, OUTPUT);
     pinMode(config::coin_tx, OUTPUT);
 
-    coin_serial.begin();
+    coin_serial.begin(4800);
 
     // Attach reset Pin's interrupt routine
     attachInterrupt(digitalPinToInterrupt(config::reset_button), reset_isr, RISING);
@@ -77,8 +90,4 @@ void loop() {
         pressed_button = button_shift_register.get_input();
     }
 
-}
-
-void reset_isr() {
-    reset = true;
 }
