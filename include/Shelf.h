@@ -16,7 +16,12 @@ const uint8_t Shelf6 = 5;
 class Shelf {
 
   public:
-    //Shelfs(const Shift74HC595* const door_shift_register);
+    
+    /**
+     * Constructor
+     * 
+     * @param door_shift_register The shift register to control the door locks
+     */
     Shelf(const Shift74HC595* const door_shift_register);
     ~Shelf();
 
@@ -39,11 +44,15 @@ class Shelf {
     bool buy_shelf(const uint8_t shelf_number, const uint16_t money);
 
   private:
+    // An array storing the shelf prices 
     uint16_t _shelf_prices[config::SHELF_COUNT];
+    // An array to remember which shelf is still full
     bool _is_shelf_full[config::SHELF_COUNT];
-    //const Shift74HC595* const _door_shift_register;
+    // Instance to the Shelfs shift register to control door locks
     const Shift74HC595* const _door_shift_register;
 
+    // Do not allow copying
+    Shelf(const Shelf& other);
     Shelf& operator=(const Shelf& other);
 };
 

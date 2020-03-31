@@ -4,7 +4,9 @@
 
 Shift74HC165::Shift74HC165(const uint8_t shift_load_pin, const uint8_t clock_pin,
                  const uint8_t serial_output_pin)
-  : PISO::PISO(shift_load_pin, clock_pin, serial_output_pin) {}
+  : _shift_load_pin{shift_load_pin},
+    _clock_pin{clock_pin},
+    _serial_output_pin{serial_output_pin} {}
 
 
 const uint8_t Shift74HC165::get_input() const {

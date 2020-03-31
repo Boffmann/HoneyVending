@@ -1,9 +1,9 @@
 #ifndef _74HC595_h_
 #define _74HC595_h_
 
-#include "SIPO.h"
+#include <stdint.h>
 
-class Shift74HC595 : public SIPO {
+class Shift74HC595 {
   public:
     Shift74HC595(const uint8_t shift_register_clock_pin, const uint8_t storage_register_clock_pin,
                  const uint8_t serial_input_pin, const uint8_t output_enable_pin);
@@ -14,7 +14,7 @@ class Shift74HC595 : public SIPO {
      *
      * @param message: The byte to write out
      */
-    void write_out(const uint8_t message) const override;
+    void write_out(const uint8_t message) const;
 
     /**
      * Clears the data in the shift register. Note that this does not propagate
@@ -40,6 +40,9 @@ class Shift74HC595 : public SIPO {
 
 
   private:
+    const uint8_t _shift_register_clock_pin;
+    const uint8_t _storage_register_clock_pin;
+    const uint8_t _serial_input_pin;
     const uint8_t _output_enable_pin;
 };
 

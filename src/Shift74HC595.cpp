@@ -4,7 +4,9 @@
 
 Shift74HC595::Shift74HC595(const uint8_t shift_register_clock_pin, const uint8_t storage_register_clock_pin,
                  const uint8_t serial_input_pin, const uint8_t output_enable_pin)
-  : SIPO::SIPO{shift_register_clock_pin, storage_register_clock_pin, serial_input_pin},
+  : _shift_register_clock_pin{shift_register_clock_pin},
+    _storage_register_clock_pin{storage_register_clock_pin},
+    _serial_input_pin{serial_input_pin},
     _output_enable_pin{output_enable_pin} {
 
       clear_shift_register();
@@ -17,7 +19,7 @@ void Shift74HC595::write_out(const uint8_t message) const {
   digitalWrite(_storage_register_clock_pin, LOW);
 
   // Shift the data into the shift register
-  shiftOut(_serial_input_pin, SIPO::_shift_register_clock_pin, MSBFIRST, message);
+  shiftOut(_serial_input_pin, _shift_register_clock_pin, MSBFIRST, message);
 
   // Write the values into the storage register
   digitalWrite(_storage_register_clock_pin, HIGH);

@@ -38,6 +38,8 @@ class CoinSerial {
     uint16_t get_current_coin_count() const;
 
   private:
+
+      // current amount of coins inserted
       uint16_t _current_coin_count;
       
 };

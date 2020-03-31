@@ -9,6 +9,13 @@ uint16_t TO_MANY_DIGITS_ERROR = 1111;
 class Display {
 
   public:
+
+    /**
+     * Constructor
+     * 
+     * @param clock_pin The segment display's clock pin
+     * @param data_pin The segment display's data pin
+     */
     Display(const uint8_t clock_pin, const uint8_t data_pin);
 
     /**
@@ -31,10 +38,25 @@ class Display {
     void show(uint16_t number);
 
   private:
+    // Actual segment instance
     TM1637 _segment_display;
-    const uint8_t _max_number_of_digits = 4;
-
+    
+    /**
+     * Helper function to get the numbers of digits of a number
+     * e.g. number of digits of 23 is 2 and of 1234 is 4
+     * 
+     * @param number Number to get the digit count from
+     * @return The amount of digits in the number
+     */
     uint8_t _get_number_of_digits(const uint16_t number);
+
+    /**
+     * Helper function to get the digit at a specific location
+     * 
+     * @param number The number to get the digit from
+     * @param digit The digit number to get
+     * @return The digit at the desired location
+     */
     uint8_t _get_digit(const uint16_t number, const uint8_t digit);
 
 };

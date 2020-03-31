@@ -21,6 +21,7 @@ namespace config {
 
 
     const uint8_t SHELF_COUNT = 6;
+    const uint8_t MAX_DISPLAY_DIGITS = 4;
 
 }
 

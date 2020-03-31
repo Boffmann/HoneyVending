@@ -1,4 +1,5 @@
 #include "Display.h"
+#include "config.h"
 
 Display::Display(const uint8_t clock_pin, const uint8_t data_pin) 
   : _segment_display(clock_pin, data_pin) {}
@@ -26,14 +27,14 @@ void Display::show(uint16_t number) {
   uint8_t number_of_digits = _get_number_of_digits(number);
 
   // This display can only show four digits
-  if (number_of_digits > _max_number_of_digits) {
-    number_of_digits = _max_number_of_digits;
+  if (number_of_digits > config::MAX_DISPLAY_DIGITS) {
+    number_of_digits = config::MAX_DISPLAY_DIGITS;
     number = TO_MANY_DIGITS_ERROR;
   }
 
   // Display 0 on those parts that do not display anything else to always keep 3 digits
   // lighten up
-  for (uint8_t segment_index = 1; segment_index < _max_number_of_digits - number_of_digits; ++segment_index) {
+  for (uint8_t segment_index = 1; segment_index < config::MAX_DISPLAY_DIGITS - number_of_digits; ++segment_index) {
 
     _segment_display.display(segment_index, 0);
   }
