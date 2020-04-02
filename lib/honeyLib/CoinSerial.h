@@ -41,7 +41,7 @@ class CoinSerial {
 
       // current amount of coins inserted
       uint16_t _current_coin_count;
-      
+
 };
 
 #endif

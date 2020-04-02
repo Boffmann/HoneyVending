@@ -19,10 +19,6 @@ namespace config {
     const uint8_t door_output_enable = 12;
     const uint8_t coin_tx = 13;
 
-
-    const uint8_t SHELF_COUNT = 6;
-    const uint8_t MAX_DISPLAY_DIGITS = 4;
-
 }
 
 #endif

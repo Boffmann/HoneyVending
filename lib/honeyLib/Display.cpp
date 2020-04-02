@@ -1,4 +1,5 @@
 #include "Display.h"
+
 #include "config.h"
 
 Display::Display(const uint8_t clock_pin, const uint8_t data_pin) 

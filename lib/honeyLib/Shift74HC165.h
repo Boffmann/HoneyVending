@@ -9,7 +9,7 @@ class Shift74HC165 {
 
     /**
      * Constructor
-     * 
+     *
      * @param shift_load_pin The Shift register's shift load pin (latch pin)
      * @param clock_pin The Shift register's clock pin
      * @param serial_output_pin The Shift register's serial output pin
@@ -19,7 +19,7 @@ class Shift74HC165 {
 
     /**
      * Function to shift in the Shift register's input
-     * 
+     *
      * @return The Shift registers value on its input pins
      */
     const uint8_t get_input(void) const;
