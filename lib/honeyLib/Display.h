@@ -5,8 +5,15 @@
 
 #include "config.h"
 
-// Error Codes
-uint16_t TO_MANY_DIGITS_ERROR = 1111;
+	
+// Disable unused warning since variable is used
+#pragma GCC diagnostic push
+namespace /*unnamed*/ {
+  // Error Codes
+  uint16_t TO_MANY_DIGITS_ERROR = 1111;
+
+}
+#pragma GCC diagnostic pop
 
 class Display {
 
@@ -39,10 +46,6 @@ class Display {
      */
     void show(uint16_t number);
 
-  private:
-    // Actual segment instance
-    TM1637 _segment_display;
-
     /**
      * Helper function to get the numbers of digits of a number
      * e.g. number of digits of 23 is 2 and of 1234 is 4
@@ -50,7 +53,7 @@ class Display {
      * @param number Number to get the digit count from
      * @return The amount of digits in the number
      */
-    uint8_t _get_number_of_digits(const uint16_t number);
+    uint8_t get_number_of_digits(const uint16_t number);
 
     /**
      * Helper function to get the digit at a specific location
@@ -59,7 +62,11 @@ class Display {
      * @param digit The digit number to get
      * @return The digit at the desired location
      */
-    uint8_t _get_digit(const uint16_t number, const uint8_t digit);
+    uint8_t get_digit(const uint16_t number, const uint8_t digit);
+
+  private:
+    // Actual segment instance
+    TM1637 _segment_display;
 
 };
 

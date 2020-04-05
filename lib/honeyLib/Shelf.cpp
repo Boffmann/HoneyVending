@@ -64,6 +64,8 @@ void Shelf::_open_door(const uint8_t door_number) const {
 
   _door_shift_register->disable_output();
 
+  delay(50);
+
   _door_shift_register->write_out(door_to_open);
 
   delay(50);
@@ -75,6 +77,8 @@ void Shelf::_open_door(const uint8_t door_number) const {
 void Shelf::_close_doors(void) const {
 
   _door_shift_register->disable_output();
+
+  delay(50);
 
   _door_shift_register->clear_shift_register();
 

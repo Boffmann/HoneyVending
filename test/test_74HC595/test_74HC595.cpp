@@ -73,28 +73,6 @@ void test_write_shift_to_storage_register(void) {
 }
 
 
-void test_playground(void) {
-  shift.disable_output();
-  delay(50);
-  shift.write_out(1);
-  delay(50);
-  shift.enable_output();
-
-  delay(5000);
-
-  shift.disable_output();
-  delay(50);
-  shift.write_out(2);
-  delay(50);
-  shift.enable_output();
-
-  delay(5000);
-
-  shift.disable_output();
-}
-
-
-
 void setup() {
   pinMode(config::door_shift_register_clock, OUTPUT);
   pinMode(config::door_storage_register_clock, OUTPUT);
@@ -103,13 +81,11 @@ void setup() {
 
   UNITY_BEGIN();
 
-  /*RUN_TEST(test_write_out);
+  RUN_TEST(test_write_out);
   RUN_TEST(test_clear_shift_register);
   RUN_TEST(test_enable_output);
   RUN_TEST(test_disable_output);
-  RUN_TEST(test_write_shift_to_storage_register);*/
-
-  RUN_TEST(test_playground);
+  RUN_TEST(test_write_shift_to_storage_register);
 
   UNITY_END();
 }

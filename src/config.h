@@ -1,5 +1,5 @@
-#ifndef _HONEY_VENDING_CONFIG_H
-#define _HONEY_VENDING_CONFIG_H
+#ifndef _HONEY_VENDING_CONFIG_H_
+#define _HONEY_VENDING_CONFIG_H_
 
 #include <stdint.h>
 

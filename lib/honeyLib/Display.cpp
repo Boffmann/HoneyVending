@@ -25,7 +25,7 @@ void Display::show(uint16_t number) {
     number = 9999;
   }
 
-  uint8_t number_of_digits = _get_number_of_digits(number);
+  uint8_t number_of_digits = get_number_of_digits(number);
 
   // This display can only show four digits
   if (number_of_digits > config::MAX_DISPLAY_DIGITS) {
@@ -41,14 +41,13 @@ void Display::show(uint16_t number) {
   }
 
   // Get every single digit out of value and display it at proper part of segment display
-  for (uint8_t segment_index = 3; segment_index >= 0; --segment_index) {
-    _segment_display.display(segment_index, _get_digit(number, segment_index));
+  for (uint8_t segment_index = config::MAX_DISPLAY_DIGITS - number_of_digits; segment_index < config::MAX_DISPLAY_DIGITS; ++segment_index) {
+    _segment_display.display(segment_index, get_digit(number, (config::MAX_DISPLAY_DIGITS - number_of_digits) - segment_index));
   }
 
 }
 
-
-uint8_t Display::_get_number_of_digits(uint16_t number) {
+uint8_t Display::get_number_of_digits(uint16_t number) {
   uint8_t result = 0;
 
   while (number != 0) {
@@ -59,17 +58,10 @@ uint8_t Display::_get_number_of_digits(uint16_t number) {
   return result;
 }
 
-uint8_t Display::_get_digit(const uint16_t number, const uint8_t digit) {
-  switch (digit) {
-    case 0:
-      return number / 1000 % 10;
-    case 1:
-      return number / 100 % 10;
-    case 2:
-      return number / 10 % 10;
-    case 3:
-      return number % 10;
-    default:
-      return 8;
-  }
+uint8_t Display::get_digit(const uint16_t number, const uint8_t digit) {
+  const uint8_t number_of_digits = get_number_of_digits(number);
+  const uint8_t digit_difference = number_of_digits - digit - 1;
+  const uint16_t divisor = pow(10, digit_difference);
+
+  return (number / divisor) % 10;
 }
