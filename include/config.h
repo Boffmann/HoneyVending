@@ -1,7 +1,7 @@
 #ifndef _HONEY_VENDING_CONFIG_H
 #define _HONEY_VENDING_CONFIG_H
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace config {
 
@@ -18,6 +18,10 @@ namespace config {
     const uint8_t door_shift_register_clock = 11;
     const uint8_t door_output_enable = 12;
     const uint8_t coin_tx = 13;
+
+
+    const uint8_t SHELF_COUNT = 6;
+    const uint8_t MAX_DISPLAY_DIGITS = 4;
 
 }
 
