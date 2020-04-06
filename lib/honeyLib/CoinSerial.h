@@ -23,8 +23,10 @@ class CoinSerial {
     /**
      * Reads Serial Input from Coin Acceptor and adds value to _current_coin_count
      * See on https://bigdanzblog.wordpress.com/2015/01/12/interfacing-dg600f-coin-acceptor-to-arduino/ for Coin Acceptor Sample Code
+     * 
+     * @return true if new coin was inserted, false otherwise
      */
-    void update(void);
+    const bool update(void);
 
     /**
      * Resets the coin count. This is invoked when a door was opened
@@ -39,7 +41,7 @@ class CoinSerial {
 
   private:
 
-      // current amount of coins inserted
+      // current amount of coins inserted in cents
       uint16_t _current_coin_count;
 
 };

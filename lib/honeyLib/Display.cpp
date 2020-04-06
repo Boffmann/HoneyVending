@@ -50,7 +50,11 @@ void Display::show(uint16_t number) {
 
 }
 
-uint8_t Display::get_number_of_digits(uint16_t number) {
+void Display::clear(void) {
+  _segment_display.clearDisplay();
+}
+
+const uint8_t Display::get_number_of_digits(uint16_t number) const {
   uint8_t result = 0;
 
   while (number != 0) {
@@ -61,7 +65,7 @@ uint8_t Display::get_number_of_digits(uint16_t number) {
   return result;
 }
 
-uint8_t Display::get_digit(const uint16_t number, const uint8_t digit) {
+const uint8_t Display::get_digit(const uint16_t number, const uint8_t digit) const {
   const uint8_t number_of_digits = get_number_of_digits(number);
   const uint8_t digit_difference = number_of_digits - digit - 1;
   const uint16_t divisor = pow(10, digit_difference);
