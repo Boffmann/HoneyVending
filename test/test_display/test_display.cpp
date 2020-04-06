@@ -16,6 +16,9 @@ void test_get_number_of_digits(void) {
 }
 
 void test_get_digit(void) {
+    uint16_t value = 1234;
+    TEST_ASSERT_EQUAL(2, display.get_digit(value, 1));
+    TEST_ASSERT_EQUAL(3, display.get_digit(value, 2));
     TEST_ASSERT_EQUAL(display.get_digit(12, 1), 2);
     TEST_ASSERT_EQUAL(display.get_digit(123, 1), 2);
     TEST_ASSERT_EQUAL(display.get_digit(1234, 0), 1);

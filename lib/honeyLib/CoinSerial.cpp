@@ -17,7 +17,7 @@ void CoinSerial::update(void) {
     coinValue = Serial.read();
 
     if (coinValue != NO_COIN) {
-      _current_coin_count += coinValue;
+      _current_coin_count += (coinValue * 10);
     }
   }
 }

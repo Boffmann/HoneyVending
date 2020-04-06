@@ -33,16 +33,19 @@ void Display::show(uint16_t number) {
     number = TO_MANY_DIGITS_ERROR;
   }
 
+  // The number of the first segment that is used to show the number
+  const uint8_t first_segment_number = config::MAX_DISPLAY_DIGITS - number_of_digits;
+
   // Display 0 on those parts that do not display anything else to always keep 3 digits
   // lighten up
-  for (uint8_t segment_index = 1; segment_index < config::MAX_DISPLAY_DIGITS - number_of_digits; ++segment_index) {
+  for (uint8_t segment_index = 1; segment_index < first_segment_number; ++segment_index) {
 
     _segment_display.display(segment_index, 0);
   }
 
   // Get every single digit out of value and display it at proper part of segment display
-  for (uint8_t segment_index = config::MAX_DISPLAY_DIGITS - number_of_digits; segment_index < config::MAX_DISPLAY_DIGITS; ++segment_index) {
-    _segment_display.display(segment_index, get_digit(number, (config::MAX_DISPLAY_DIGITS - number_of_digits) - segment_index));
+  for (uint8_t segment_index = first_segment_number; segment_index < config::MAX_DISPLAY_DIGITS; ++segment_index) {
+    _segment_display.display(segment_index, get_digit(number, segment_index - first_segment_number));
   }
 
 }
