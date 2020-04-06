@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+const uint8_t NO_INPUT = 0;
+
 class Shift74HC165 {
 
   public:
@@ -28,6 +30,11 @@ class Shift74HC165 {
     const uint8_t _shift_load_pin;
     const uint8_t _clock_pin;
     const uint8_t _serial_output_pin;
+
+    /**
+     * Personal implementation for shift in to be under control what happens
+     */
+    const uint8_t _shift_in(const uint8_t bit_order) const;
 
 };
 
