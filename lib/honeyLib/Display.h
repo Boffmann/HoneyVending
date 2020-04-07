@@ -1,10 +1,13 @@
 #ifndef _HONEY_VENDING_DISPLAY_H_
 #define _HONEY_VENDING_DISPLAY_H_
 
-#include <TM1637.h>
+#include <lib/DigitalTube/TM1637.h>
 
+#include "config.h"
+
+	
 // Error Codes
-uint16_t TO_MANY_DIGITS_ERROR = 1111;
+const uint16_t TO_MANY_DIGITS_ERROR = 1111;
 
 class Display {
 
@@ -12,7 +15,7 @@ class Display {
 
     /**
      * Constructor
-     * 
+     *
      * @param clock_pin The segment display's clock pin
      * @param data_pin The segment display's data pin
      */
@@ -37,27 +40,32 @@ class Display {
      */
     void show(uint16_t number);
 
-  private:
-    // Actual segment instance
-    TM1637 _segment_display;
-    
+    /**
+     * Clear the display
+     */
+    void clear(void);
+
     /**
      * Helper function to get the numbers of digits of a number
      * e.g. number of digits of 23 is 2 and of 1234 is 4
-     * 
+     *
      * @param number Number to get the digit count from
      * @return The amount of digits in the number
      */
-    uint8_t _get_number_of_digits(const uint16_t number);
+    const uint8_t get_number_of_digits(const uint16_t number) const;
 
     /**
      * Helper function to get the digit at a specific location
-     * 
+     *
      * @param number The number to get the digit from
      * @param digit The digit number to get
      * @return The digit at the desired location
      */
-    uint8_t _get_digit(const uint16_t number, const uint8_t digit);
+    const uint8_t get_digit(const uint16_t number, const uint8_t digit) const;
+
+  private:
+    // Actual segment instance
+    TM1637 _segment_display;
 
 };
 

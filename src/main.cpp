@@ -7,6 +7,7 @@
 #include "Shift74HC165.h"
 #include "Shift74HC595.h"
 #include "Shelf.h"
+#include "Display.h"
 
 boolean running = false;
 volatile boolean reset = false;
@@ -22,6 +23,8 @@ Shelf shelf(
                              config::door_output,
                              config::door_output_enable)
 );
+
+Display display(config::segment_clock, config::segment_signal);
 
 void reset_isr() {
     reset = true;
@@ -43,6 +46,8 @@ void setup() {
     pinMode(config::coin_tx, OUTPUT);
 
     coin_serial.begin(4800);
+    display.init();
+    display.set_brightness(BRIGHT_TYPICAL);
 
     // Attach reset Pin's interrupt routine
     attachInterrupt(digitalPinToInterrupt(config::reset_button), reset_isr, RISING);
