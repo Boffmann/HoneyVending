@@ -792,7 +792,7 @@ U 1 1 5E8B4A43
 P 1850 4150
 F 0 "J1" H 1744 3525 50  0000 C CNN
 F 1 "Conn_01x08_Female" H 1744 3616 50  0000 C CNN
-F 2 "Connector_Molex:Molex_Mini-Fit_Jr_5566-08A_2x04_P4.20mm_Vertical" H 1850 4150 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical" H 1850 4150 50  0001 C CNN
 F 3 "~" H 1850 4150 50  0001 C CNN
 	1    1850 4150
 	-1   0    0    1   
