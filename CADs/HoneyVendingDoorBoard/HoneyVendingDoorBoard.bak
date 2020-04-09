@@ -798,7 +798,7 @@ F 3 "~" H 1300 4150 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Text Notes 850  4400 0    50   ~ 0
-SER\nSRCLK\nSRCLR\nRCLK\nOE\n+5V\nunconn\nunconn
+SRCLK\nSER\nRCLK\nSRCLR\n5V\nOE\n12V\nGND
 $Comp
 L power:GND #PWR0116
 U 1 1 5E8CC3A4
@@ -813,12 +813,12 @@ $EndComp
 $Comp
 L power:+5V #PWR0117
 U 1 1 5E8CC416
-P 1800 4250
-F 0 "#PWR0117" H 1800 4100 50  0001 C CNN
-F 1 "+5V" H 1815 4423 50  0000 C CNN
-F 2 "" H 1800 4250 50  0001 C CNN
-F 3 "" H 1800 4250 50  0001 C CNN
-	1    1800 4250
+P 1850 4150
+F 0 "#PWR0117" H 1850 4000 50  0001 C CNN
+F 1 "+5V" H 1865 4323 50  0000 C CNN
+F 2 "" H 1850 4150 50  0001 C CNN
+F 3 "" H 1850 4150 50  0001 C CNN
+	1    1850 4150
 	0    1    1    0   
 $EndComp
 $Comp
@@ -854,8 +854,6 @@ QG, QH and QH'\nare outputs. No\nneed to pull down
 Wire Wire Line
 	1600 5350 1700 5350
 Wire Wire Line
-	1500 4250 1800 4250
-Wire Wire Line
 	1500 3750 1750 3750
 Wire Wire Line
 	1500 3850 1750 3850
@@ -865,15 +863,15 @@ Wire Wire Line
 	1500 4050 1750 4050
 Wire Wire Line
 	1500 4150 1750 4150
-Text Label 1750 3750 0    50   ~ 0
+Text Label 2050 3500 0    50   ~ 0
 SER
-Text Label 1750 3850 0    50   ~ 0
+Text Label 1900 3650 0    50   ~ 0
 SRCLK
-Text Label 1750 3950 0    50   ~ 0
+Text Label 2200 4400 0    50   ~ 0
 SRCLR
-Text Label 1750 4050 0    50   ~ 0
+Text Label 2000 4600 0    50   ~ 0
 RCLK
-Text Label 1750 4150 0    50   ~ 0
+Text Label 2450 4600 0    50   ~ 0
 OE
 Wire Wire Line
 	3050 3750 2750 3750
@@ -894,10 +892,10 @@ RCLK
 Text Label 2750 4350 0    50   ~ 0
 OE
 $Comp
-L Device:C 100nF?
+L Device:C 100nF2
 U 1 1 5E9546D2
 P 2550 3800
-F 0 "100nF?" V 2298 3800 50  0000 C CNN
+F 0 "100nF2" V 2298 3800 50  0000 C CNN
 F 1 "AntiFlicker" V 2389 3800 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 2588 3650 50  0001 C CNN
 F 3 "~" H 2550 3800 50  0001 C CNN
@@ -913,25 +911,4 @@ Wire Wire Line
 Wire Wire Line
 	2550 3350 2950 3350
 Connection ~ 2950 3350
-$Comp
-L Connector:Conn_01x02_Male J?
-U 1 1 5E9601AF
-P 950 5100
-F 0 "J?" H 1056 5278 50  0000 C CNN
-F 1 "12V Power" H 1056 5187 50  0000 C CNN
-F 2 "" H 950 5100 50  0001 C CNN
-F 3 "~" H 950 5100 50  0001 C CNN
-	1    950  5100
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1150 5200 1250 5200
-Wire Wire Line
-	1250 5200 1250 5350
-Connection ~ 1250 5350
-Wire Wire Line
-	1150 5100 1700 5100
-Wire Wire Line
-	1700 5100 1700 5350
-Connection ~ 1700 5350
 $EndSCHEMATC
