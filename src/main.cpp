@@ -3,26 +3,17 @@
 #include <avr/power.h>
 
 #include "config.h"
-#include "CoinSerial.h"
-#include "Shift74HC165.h"
-#include "Shift74HC595.h"
-#include "Shelf.h"
-#include "Display.h"
+#include "Hardware/CoinSerial.h"
+#include "Hardware/Shift74HC165.h"
+#include "Hardware/Shift74HC595.h"
+#include "Hardware/Display.h"
 
 boolean running = false;
 volatile boolean reset = false;
 uint8_t pressed_button = 0;
-CoinSerial coin_serial;
 Shift74HC165 button_shift_register(config::button_shift_load,
                               config::button_clock,
                               config::button_output);
-
-Shelf shelf(
-            new Shift74HC595(config::door_shift_register_clock, 
-                             config::door_storage_register_clock,
-                             config::door_output,
-                             config::door_output_enable)
-);
 
 Display display(config::segment_clock, config::segment_signal);
 
@@ -45,12 +36,12 @@ void setup() {
     pinMode(config::door_output_enable, OUTPUT);
     pinMode(config::coin_tx, OUTPUT);
 
-    coin_serial.begin(4800);
+    CoinSerial::begin(4800);
     display.init();
     display.set_brightness(BRIGHT_TYPICAL);
 
     // Attach reset Pin's interrupt routine
-    attachInterrupt(digitalPinToInterrupt(config::reset_button), reset_isr, RISING);
+    //attachInterrupt(digitalPinToInterrupt(config::reset_button), reset_isr, RISING);
 }
 
 /**
@@ -79,21 +70,5 @@ void goodnight_arduino() {
 }
 
 void loop() {
-    // Give the device some time to start
-    delay(3000);
-    // Go to sleep and wait for coin to be inserted
     goodnight_arduino();
-
-    // Run after waking up
-    if (reset) {
-        // TODO
-    } else {
-        running = true;
-    }
-    
-    while (running) {
-        coin_serial.update();
-        pressed_button = button_shift_register.get_input();
-    }
-
 }

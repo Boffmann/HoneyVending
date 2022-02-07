@@ -1,7 +1,7 @@
 #ifndef _HONEY_VENDING_DISPLAY_H_
 #define _HONEY_VENDING_DISPLAY_H_
 
-#include <lib/DigitalTube/TM1637.h>
+#include "TM1637.h"
 
 #include "config.h"
 

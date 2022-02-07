@@ -57,7 +57,7 @@ void test_show_digits(void) {
     display.show(12345);
     delay(5000);*/
 
-    display.show(1005);
+    display.show(223);
 
 }
 
@@ -71,11 +71,11 @@ void setup() {
 
     UNITY_BEGIN();
 
-    //RUN_TEST(test_get_number_of_digits);
-    //RUN_TEST(test_get_digit);
+    RUN_TEST(test_get_number_of_digits);
+    RUN_TEST(test_get_digit);
 
     //RUN_TEST(test_brightness);
-    //RUN_TEST(test_show_digits);
+    RUN_TEST(test_show_digits);
 
     UNITY_END();
 

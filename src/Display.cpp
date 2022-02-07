@@ -1,6 +1,8 @@
-#include "Display.h"
+#include "Hardware/Display.h"
 
 #include "config.h"
+
+const uint8_t MAX_DISPLAY_DIGITS = 4;
 
 Display::Display(const uint8_t clock_pin, const uint8_t data_pin) 
   : _segment_display(clock_pin, data_pin) {}
@@ -28,13 +30,13 @@ void Display::show(uint16_t number) {
   uint8_t number_of_digits = get_number_of_digits(number);
 
   // This display can only show four digits
-  if (number_of_digits > config::MAX_DISPLAY_DIGITS) {
-    number_of_digits = config::MAX_DISPLAY_DIGITS;
+  if (number_of_digits > MAX_DISPLAY_DIGITS) {
+    number_of_digits = MAX_DISPLAY_DIGITS;
     number = TO_MANY_DIGITS_ERROR;
   }
 
   // The number of the first segment that is used to show the number
-  const uint8_t first_segment_number = config::MAX_DISPLAY_DIGITS - number_of_digits;
+  const uint8_t first_segment_number = MAX_DISPLAY_DIGITS - number_of_digits;
 
   // Display 0 on those parts that do not display anything else to always keep 3 digits
   // lighten up
@@ -44,7 +46,7 @@ void Display::show(uint16_t number) {
   }
 
   // Get every single digit out of value and display it at proper part of segment display
-  for (uint8_t segment_index = first_segment_number; segment_index < config::MAX_DISPLAY_DIGITS; ++segment_index) {
+  for (uint8_t segment_index = first_segment_number; segment_index < MAX_DISPLAY_DIGITS; ++segment_index) {
     _segment_display.display(segment_index, get_digit(number, segment_index - first_segment_number));
   }
 
