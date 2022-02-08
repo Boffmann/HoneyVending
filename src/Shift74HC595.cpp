@@ -9,11 +9,11 @@ Shift74HC595::Shift74HC595(const uint8_t shift_register_clock_pin, const uint8_t
     _serial_input_pin{serial_input_pin},
     _output_enable_pin{output_enable_pin} {
 
-      write_out(0);
+      shift_out(0);
       _disable_output();
     }
 
-void Shift74HC595::write_out(const uint8_t message) const {
+void Shift74HC595::shift_out(const uint8_t message) const {
 
   // The values are shifted into the storage register with a positive edge.
   // Prepare by setting it low

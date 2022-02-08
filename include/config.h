@@ -1,5 +1,5 @@
-#ifndef _HONEY_VENDING_CONFIG_H_
-#define _HONEY_VENDING_CONFIG_H_
+#ifndef _HV_CONFIG_H
+#define _HV_CONFIG_H
 
 #include <stdint.h>
 
@@ -18,6 +18,8 @@ namespace config {
     const uint8_t door_shift_register_clock = 11;
     const uint8_t door_output_enable = 12;
     const uint8_t coin_tx = 13;
+
+    const uint8_t button_rack_interrupt = 14;
 
 }
 

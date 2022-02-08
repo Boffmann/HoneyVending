@@ -1,35 +1,40 @@
 #include "Data/Shelf.h"
 
-Shelf::Shelf(const SHELF id, const uint32_t price) 
-    :   _id(id), 
+Shelf::Shelf(const SHELF_ID id, const double price) 
+    :   _id(id),
         _price(price),
         _is_open(false),
         _is_empty(false),
         _open_for(0) 
 {}
 
-const uint32_t Shelf::get_price(void) const {
-    return this->_price;
+SHELF_ID Shelf::get_id() const {
+    return this->_id;
 }
 
-const bool Shelf::is_open(void) const {
-    return this->_is_open;
-}
+bool Shelf::open(double& debit) {
 
-void Shelf::set_open(void) {
+    if (this->_is_open || this->_is_empty || debit < this->_price) {
+        return false;
+    }
+
     this->_is_open = true;
     this->_open_for = 0;
     this->_is_empty = true;
+    debit -= this->_price;
+
+    return true;
 }
 
-void Shelf::set_closed(void) {
+void Shelf::close(void) {
     this->_is_open = false;
+    this->_open_for = 0;
 }
 
 void Shelf::add_is_open_for(const uint8_t duration) {
     this->_open_for += duration;
 }
 
-const uint8_t Shelf::get_is_open_time(void) const {
+uint8_t Shelf::get_is_open_time(void) const {
     return this->_open_for;
 }

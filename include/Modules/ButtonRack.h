@@ -1,9 +1,10 @@
-#ifndef _HONEY_VENDING_BUTTON_RACK_H_
-#define _HONEY_VENDING_BUTTON_RACK_H_
+#ifndef _HV_BUTTON_RACK_H_
+#define _HV_BUTTON_RACK_H_
 
 #include <stdint.h>
 
 #include "Hardware/Shift74HC165.h"
+#include "Hardware/HardwareInterrupt.h"
 
 typedef uint8_t BUTTON;
 
@@ -25,14 +26,10 @@ class ButtonRack {
     ButtonRack();
 
     /**
-     * Returns true if a button is pressed, false otherwise
+     * Return the currently pressed button.
+     * If no button is pressed, NO_BUTTON is returned
      */
-    const bool is_button_pressed(void) const;
-
-    /**
-     * Return the button that has been pressed
-     */
-    const BUTTON get_pressed_button(void) const;
+    BUTTON get_pressed_button(void) const;
 
 
   private:

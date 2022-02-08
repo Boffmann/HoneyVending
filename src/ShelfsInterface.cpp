@@ -1,52 +1,80 @@
 #include "Modules/ShelfsInterface.h"
 
-#include <Arduino.h>
+#include <math.h>
+#include <stdio.h>
+
+#include "Hardware/TimerInterrupt.h"
 
 // In Seconds
-const uint8_t INTERRUPT_DURATION = 5;
+const uint8_t INTERRUPT_DURATION = 10;
 
-void ShelfsInterface::add_shelf(const SHELF id, const uint32_t price) {
-  this->_shelfs[id] = Shelf(id, price);
+ShelfsInterface::ShelfsInterface() 
+    : _door_shift_register{
+          config::door_shift_register_clock,
+          config::door_storage_register_clock,
+          config::door_output,
+          config::door_output_enable},
+      _shelfs{
+          Shelf(SHELF_1, 5.0),
+          Shelf(SHELF_2, 5.0),
+          Shelf(SHELF_3, 5.0),
+          Shelf(SHELF_4, 5.0),
+          Shelf(SHELF_5, 5.0),
+          Shelf(SHELF_6, 5.0)}
+{
+  register_timer_interrupt();
 }
 
-const bool ShelfsInterface::buy_shelf(const SHELF shelf_id, uint32_t &debit) {
-  Shelf& shelf_to_open = this->_shelfs[shelf_id];
+bool ShelfsInterface::buy_shelf(const SHELF_ID shelf_id, double &debit) {
 
-  if (shelf_to_open.is_open()) {
-    return false;
-  }
-  if (shelf_to_open.get_price() > debit) {
+  Shelf *shelf_to_open = nullptr;
+  
+  if (!_get_shelf_by_id(shelf_id, &shelf_to_open)) {
     return false;
   }
 
-  // Create power of two value to open correct door
-  const uint8_t door_to_open = pow(2, shelf_id);
-  this->_door_shift_register.write_out(door_to_open);
-  shelf_to_open.set_open();
-  this->_open_shelfs.insert(shelf_to_open);
-  debit -= shelf_to_open.get_price();
+  if (!shelf_to_open->open(debit)) {
+      return false;
+  }
+
+  this->_open_shelfs.insert(*shelf_to_open);
+
+  this->_door_shift_register.shift_out(open_shelfs_to_bit_mask());
+
   return true;
 }
 
-void ShelfsInterface::close_overdue_shelfs(void) {
-  // Safe copy of passed timers and substract to not miss changes in interrupt
-  uint8_t local_passed_timers = this->_passed_timers;
-  this->_passed_timers -= local_passed_timers;
+uint8_t ShelfsInterface::close_overdue_shelfs(void) {
+  uint8_t number_closed = 0;
+  uint32_t passed_timers = get_and_reset_timer_counter();
 
   const node_t *current = this->_open_shelfs.get_first();
   while (current != nullptr) {
-    Shelf& processed_shelf = this->_open_shelfs.get_shelf(*current);
-    processed_shelf.add_is_open_for(local_passed_timers * INTERRUPT_DURATION);
+    Shelf& processed_shelf = this->_open_shelfs.get_shelf(current);
+    processed_shelf.add_is_open_for(passed_timers * INTERRUPT_DURATION);
     if (this->_should_close(processed_shelf)) {
       this->_close_shelf(processed_shelf);
-      this->_open_shelfs.remove(processed_shelf);
+      number_closed++;
     }
-    current = this->_open_shelfs.get_next(*current);
-  }  
+    current = this->_open_shelfs.get_next(current);
+  }
+
+  return number_closed;
 }
 
-void ShelfsInterface::_close_shelf(Shelf& shelf) {
-  // TODO implement than only one door can be closed when multiple open
-  this->_door_shift_register.write_out(0);
-  shelf.set_closed();
+OpenShelfList& ShelfsInterface::get_open_shelfs(void) {
+  return this->_open_shelfs;
+}
+
+uint8_t ShelfsInterface::open_shelfs_to_bit_mask(void) const {
+  uint8_t result = 0x0;
+
+  const node_t *current = this->_open_shelfs.get_first();
+  while (current != nullptr) {
+    SHELF_ID id = this->_open_shelfs.get_shelf(current).get_id();
+    result |= (uint8_t)ceil(pow(2, id - 1));
+    current = this->_open_shelfs.get_next(current);
+  }
+
+  return result;
 }

@@ -14,20 +14,22 @@ class Shift74HC165 {
      * @param clock_pin The Shift register's clock pin
      * @param serial_output_pin The Shift register's serial output pin
      */
-    Shift74HC165(const uint8_t shift_load_pin, const uint8_t clock_pin,
-                 const uint8_t serial_output_pin);
+    Shift74HC165(uint8_t shift_load_pin, uint8_t clock_pin,
+                 uint8_t serial_output_pin);
 
     /**
      * Read from the shift register and return the read byte
      *
      * @return The Shift registers value on its input pins
      */
-    const uint8_t get_input(void) const;
+    uint8_t shift_in(void) const;
 
   private:
     const uint8_t _shift_load_pin;
     const uint8_t _clock_pin;
     const uint8_t _serial_output_pin;
+
+    uint8_t _hardware_shift_in(void) const;
 
 };
 

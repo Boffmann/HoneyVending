@@ -4,40 +4,37 @@
 
 #include "Data/Shelf.h"
 
-typedef struct node {
-   Shelf* shelf;
-   struct node *next;
-   struct node *potential_next;
-
-   node(struct node* pot_next) {
-       shelf = nullptr;
-       next = nullptr;
-       potential_next = pot_next;
-   }
-} node_t;
-
-node_t sixt(nullptr);
-node_t fifth(&sixt);
-node_t fourth(&fifth);
-node_t third(&fourth);
-node_t second(&third);
-node_t first(&second);
-
 OpenShelfList::OpenShelfList()
-: _head{nullptr}, _tail{nullptr} 
+:   _head{nullptr},
+    _tail{nullptr},
+    _sixt{nullptr},
+    _fifth{&_sixt},
+    _fourth{&_fifth},
+    _third{&_fourth},
+    _second{&_third},
+    _first{&_second}
 {}
 
-const bool OpenShelfList::insert(Shelf &shelf) {
+bool OpenShelfList::insert(Shelf &shelf) {
+    node_t *current = this->_head;
 
     if (this->_head == nullptr) {
-        first.shelf = &shelf;
-        this->_head = &first;
-        this->_tail = &first;
+        this->_first.shelf = &shelf;
+        this->_head = &this->_first;
+        this->_tail = &this->_first;
         return true;
     }
     if (this->_tail->potential_next == nullptr) {
         return false;
     }
+
+    while (current != nullptr) {
+        if (*(current->shelf) == shelf) {
+            return false;
+        }
+        current = current->next;
+    }
+
     this->_tail->next = this->_tail->potential_next;
     this->_tail = this->_tail->potential_next;
     this->_tail->shelf = &shelf;
@@ -47,9 +44,18 @@ const bool OpenShelfList::insert(Shelf &shelf) {
 void OpenShelfList::remove(const Shelf &shelf) {
     node_t *current = this->_head;
 
+    if (current == nullptr) {
+        return;
+    }
+
     while (current->next != nullptr) {
-        if (current->next->shelf == &shelf) {
+        if (*(current->next->shelf) == shelf) {
             current->next = current->next->next;
+            // if the removed element was the last one, set tail
+            if (current->next == nullptr) {
+                this->_tail = current;
+                break;
+            }
         }
         current = current->next;
     }
@@ -60,14 +66,42 @@ void OpenShelfList::remove(const Shelf &shelf) {
     }
 }
 
+/*void OpenShelfList::reset(void) {
+    _head = nullptr;
+    _tail = nullptr;
+    _sixt.next = nullptr;
+    _fifth.next = nullptr;
+    _fourth.next = nullptr;
+    _third.next = nullptr;
+    _second.next = nullptr;
+    _first.next = nullptr;
+}*/
+
+void OpenShelfList::print(void) const {
+    const node_t *current = this->_head;
+    printf("-------\n");
+
+    if (current == nullptr) {
+        printf("EMPTY\n");
+        printf("-------\n");
+        return;
+    }
+
+    while (current != nullptr) {
+        printf("Contains Shelf %d\n", current->shelf->get_id());
+        current = current->next;
+    }
+    printf("-------\n");
+}
+
 const node_t* OpenShelfList::get_first() const {
     return this->_head;
 }
 
-const node_t* OpenShelfList::get_next(const node_t &node) const {
-    return node.next;
+const node_t* OpenShelfList::get_next(const node_t *node) const {
+    return node->next;
 }
 
-Shelf& OpenShelfList::get_shelf(const node_t &node) const {
-    return *node.shelf;
+Shelf& OpenShelfList::get_shelf(const node_t *node) const {
+    return *node->shelf;
 }

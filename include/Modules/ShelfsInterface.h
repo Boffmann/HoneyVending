@@ -1,5 +1,5 @@
-#ifndef _HONEY_VENDING_SHELFS_H_
-#define _HONEY_VENDING_SHELFS_H_
+#ifndef _HV_SHELFS_INTERFACE_
+#define _HV_SHELFS_INTERFACE_
 
 #include <stdint.h>
 
@@ -8,48 +8,68 @@
 #include "Data/OpenShelfList.h"
 #include "config.h"
 
-
-const uint8_t SHELF_COUNT = 6;
-
 class ShelfsInterface {
 
   public:
 
-    // TODO Implement constructor
     ShelfsInterface();
 
-    void add_shelf(const SHELF, const uint32_t);
-
     /**
-     * Use this function to queue a shelf to open. If the shelf is empty, it will not be queued
+     * 
      * 
      * @param shelf The shelf to open
      * @return true if the shelf is not empty, false otherwise
      */
-    const bool buy_shelf(const SHELF, uint32_t&);
+    bool buy_shelf(const SHELF_ID, double&);
 
     /**
      * close shelfs that were open long enough
+     * 
+     * @return number of closed shelfs
      */
-    void close_overdue_shelfs(void); 
+    uint8_t close_overdue_shelfs(void);
+
+    /**
+     * For testing purposes only
+     */
+    OpenShelfList& get_open_shelfs(void);
+
+    /**
+     * public because I want it to be tested.
+     * In this small project I care more about properly testing my code
+     * instead of 100% proper information hiding
+     */
+    uint8_t open_shelfs_to_bit_mask(void) const;
 
   private:
 
-    Shelf _shelfs[SHELF_COUNT];
-    /** counter to track how many timer interrupts were registered to close doors again */
-    uint8_t _passed_timers;
-    OpenShelfList _open_shelfs;
-
     // Instance to the Shelfs shift register to control door locks
     const Shift74HC595 _door_shift_register;
+
+    Shelf _shelfs[MAX_SHELF_ID];
+    OpenShelfList _open_shelfs;
 
     // Do not allow copying
     ShelfsInterface(const ShelfsInterface&);
     ShelfsInterface& operator=(const ShelfsInterface&);
 
-    void _close_shelf(Shelf&);
-    // TODO Implementation
-    const bool _should_close(const Shelf&) const;
+    void _close_shelf(Shelf& shelf) {
+      shelf.close();
+      this->_open_shelfs.remove(shelf);
+      this->_door_shift_register.shift_out(open_shelfs_to_bit_mask());
+    }
+
+    bool _should_close(const Shelf& shelf) const {
+      return shelf.get_is_open_time() > 30;
+    }
+
+    bool _get_shelf_by_id(SHELF_ID shelf_id, Shelf **shelf) {
+      if (shelf_id == NO_SHELF) {
+        return false;
+      }
+      *shelf = &_shelfs[shelf_id - 1];
+      return true;
+    }
 
 };
 
