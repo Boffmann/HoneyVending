@@ -1,8 +1,8 @@
 #ifndef _MONEY_INTERFACE_H_
 #define _MONEY_INTERFACE_H_
 
-#include "Hardware/CoinSerial.h"
-#include "Hardware/Display.h"
+#include "CoinSerial.h"
+#include "Display.h"
 
 #include <stdint.h>
 
@@ -22,7 +22,7 @@ public:
     /**
      * Returns current money balance
      */
-    const uint32_t get_balance(void) const;
+    uint32_t& get_balance(void) const;
 
     /**
      * Notify the money interface that money has been spent
@@ -35,8 +35,8 @@ private:
 
     uint32_t _balance;
     // Do not allow copying
-    ButtonRack(const ButtonRack& other);
-    ButtonRack& operator=(const ButtonRack& other);
+    MoneyInterface(const MoneyInterface& other);
+    MoneyInterface& operator=(const MoneyInterface& other);
 
 };
 

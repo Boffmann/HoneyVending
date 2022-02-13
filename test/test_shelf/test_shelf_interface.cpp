@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
-#include "Modules/ShelfsInterface.h"
-#include "Hardware/TimerInterrupt.h"
+#include "ShelfsInterface.h"
+#include "TimerInterrupt.h"
 
 #include <stdio.h>
 
 TEST(ShelfInterfaceTests, TestBuyShelf) {
     double shelf_debit = 5.0;
-    ShelfsInterface interface;
+    ShelfsInterface interface(0, 0, 0, 0);
 
     bool bought_successfully = interface.buy_shelf(SHELF_1, shelf_debit);
 
@@ -17,7 +17,7 @@ TEST(ShelfInterfaceTests, TestBuyShelf) {
 
 TEST(ShelfInterfaceTests, TestCannotBuyTwice) {
     double shelf_debit = 10.0;
-    ShelfsInterface interface;
+    ShelfsInterface interface(0, 0, 0, 0);
 
     bool bought_successfully = interface.buy_shelf(SHELF_1, shelf_debit);
 
@@ -29,7 +29,7 @@ TEST(ShelfInterfaceTests, TestCannotBuyTwice) {
 
 TEST(ShelfInterfaceTests, TestCannotBuyWithTooLessMoney) {
     double shelf_debit = 4.0;
-    ShelfsInterface interface;
+    ShelfsInterface interface(0, 0, 0, 0);
 
     bool bought_successfully = interface.buy_shelf(SHELF_2, shelf_debit);
 
@@ -38,7 +38,7 @@ TEST(ShelfInterfaceTests, TestCannotBuyWithTooLessMoney) {
 
 TEST(ShelfInterfaceTests, TestCannotBuyNotAdded) {
     double shelf_debit = 5.0;
-    ShelfsInterface interface;
+    ShelfsInterface interface(0, 0, 0, 0);
 
     bool bought_successfully = interface.buy_shelf(NO_SHELF, shelf_debit);
 
@@ -47,7 +47,7 @@ TEST(ShelfInterfaceTests, TestCannotBuyNotAdded) {
 
 TEST(ShelfInterfaceTests, TestNothingClosedWhenNothingOverdue) {
     double shelf_debit = 5.0;
-    ShelfsInterface interface;
+    ShelfsInterface interface(0, 0, 0, 0);
     
     bool bought_successfully = interface.buy_shelf(SHELF_1, shelf_debit);
 
@@ -60,7 +60,7 @@ TEST(ShelfInterfaceTests, TestNothingClosedWhenNothingOverdue) {
 
 TEST(ShelfInterfaceTests, CloseWhenOverdue) {
     double shelf_debit = 15.0;
-    ShelfsInterface interface;
+    ShelfsInterface interface(0, 0, 0, 0);
 
     EXPECT_EQ(0, interface.open_shelfs_to_bit_mask());
 

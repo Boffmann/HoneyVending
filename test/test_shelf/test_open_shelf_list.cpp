@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "Data/Shelf.h"
-#include "Data/OpenShelfList.h"
+#include "Shelf.h"
+#include "OpenShelfList.h"
 
 TEST(OpenShelfListTest, TestInitialisation) {
     OpenShelfList list;

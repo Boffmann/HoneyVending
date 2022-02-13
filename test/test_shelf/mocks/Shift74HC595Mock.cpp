@@ -1,4 +1,4 @@
-#include "Hardware/Shift74HC595.h"
+#include "Shift74HC595.h"
 
 
 Shift74HC595::Shift74HC595(uint8_t shift_register_clock_pin, uint8_t storage_register_clock_pin,

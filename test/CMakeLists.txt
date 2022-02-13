@@ -10,11 +10,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 set(include_path 
-    "../include"
+    "../lib/ShelfsInterface"
 )
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(sources
+    ${source_path}/test_shelf/mocks/Shift74HC595Mock.cpp
+    ${source_path}/test_shelf/mocks/TimerInterruptMock.cpp
     ${source_path}/test_shelf/test_shelf.cpp
     ${source_path}/test_shelf/test_open_shelf_list.cpp
     ${source_path}/test_shelf/test_shelf_interface.cpp

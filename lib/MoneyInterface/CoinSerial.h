@@ -2,7 +2,6 @@
 #define _COIN_SERIAL_H_
 
 #include <Arduino.h>
-#include <SoftwareSerial.h>
 
 #include <stdint.h>
 

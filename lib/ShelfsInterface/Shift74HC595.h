@@ -13,7 +13,7 @@ class Shift74HC595 {
      *
      * @param message: The byte to write out
      */
-    void shift_out(const uint8_t message) const;
+    void shift_out(uint8_t message) const;
 
 
   private:
@@ -21,9 +21,6 @@ class Shift74HC595 {
     const uint8_t _storage_register_clock_pin;
     const uint8_t _serial_input_pin;
     const uint8_t _output_enable_pin;
-
-    void _enable_output(void) const;
-    void _disable_output(void) const;
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Data/Shelf.h"
+#include "Shelf.h"
 
 double shelf_price = 5.0;
 

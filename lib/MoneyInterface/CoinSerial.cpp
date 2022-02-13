@@ -1,8 +1,10 @@
-#include "Hardware/CoinSerial.h"
+#include "CoinSerial.h"
 
 #include <Arduino.h>
-#include <SoftwareSerial.h>
+#include <HardwareSerial.h>
 
+
+// TODO Use Hardware Serial
 void CoinSerial::begin(const uint32_t baud_rate) {
   Serial.begin(baud_rate);
 }

@@ -1,4 +1,4 @@
-#include "Hardware/TimerInterrupt.h"
+#include "TimerInterrupt.h"
 
 uint32_t interrupt_counter;
 

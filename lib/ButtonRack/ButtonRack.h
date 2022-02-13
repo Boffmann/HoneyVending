@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 
-#include "Hardware/Shift74HC165.h"
-#include "Hardware/HardwareInterrupt.h"
+#include "Shift74HC165.h"
 
 typedef uint8_t BUTTON;
 
@@ -23,7 +22,7 @@ class ButtonRack {
 
   public:
 
-    ButtonRack();
+    ButtonRack(uint8_t, uint8_t, uint8_t, uint8_t);
 
     /**
      * Return the currently pressed button.

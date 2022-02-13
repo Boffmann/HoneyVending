@@ -1,8 +1,8 @@
-#include "Data/OpenShelfList.h"
+#include "OpenShelfList.h"
 
 #include <stdlib.h>
 
-#include "Data/Shelf.h"
+#include "Shelf.h"
 
 OpenShelfList::OpenShelfList()
 :   _head{nullptr},

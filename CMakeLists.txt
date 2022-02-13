@@ -44,5 +44,5 @@ enable_testing()
 # Create version file
 file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 
-add_subdirectory(src)
+add_subdirectory(lib/ShelfsInterface)
 add_subdirectory(test)

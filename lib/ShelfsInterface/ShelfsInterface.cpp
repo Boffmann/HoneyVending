@@ -1,19 +1,22 @@
-#include "Modules/ShelfsInterface.h"
+#include "ShelfsInterface.h"
 
 #include <math.h>
 #include <stdio.h>
 
-#include "Hardware/TimerInterrupt.h"
+#include "TimerInterrupt.h"
 
 // In Seconds
-const uint8_t INTERRUPT_DURATION = 10;
+const static uint8_t INTERRUPT_DURATION = 10;
 
-ShelfsInterface::ShelfsInterface() 
+ShelfsInterface::ShelfsInterface( uint8_t clock_pin,
+                                  uint8_t storage_clock_pin,
+                                  uint8_t output_pin,
+                                  uint8_t output_enable_pin)
     : _door_shift_register{
-          config::door_shift_register_clock,
-          config::door_storage_register_clock,
-          config::door_output,
-          config::door_output_enable},
+          clock_pin,
+          storage_clock_pin,
+          output_pin,
+          output_enable_pin},
       _shelfs{
           Shelf(SHELF_1, 5.0),
           Shelf(SHELF_2, 5.0),

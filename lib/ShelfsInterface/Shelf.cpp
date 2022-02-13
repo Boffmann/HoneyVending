@@ -1,4 +1,4 @@
-#include "Data/Shelf.h"
+#include "Shelf.h"
 
 Shelf::Shelf(const SHELF_ID id, const double price) 
     :   _id(id),

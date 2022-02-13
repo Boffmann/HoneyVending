@@ -12,7 +12,7 @@ void register_timer_interrupt();
 uint32_t get_and_reset_timer_counter(void);
 
 /**
- * @brief Triggers the time. ATTENTION: Used for test purpose only
+ * @brief Triggers the timer. ATTENTION: Used for test purpose only
  */
 void tick_timer_interrupt(void);
 

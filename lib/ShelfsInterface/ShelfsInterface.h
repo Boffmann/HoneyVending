@@ -3,16 +3,15 @@
 
 #include <stdint.h>
 
-#include "Hardware/Shift74HC595.h"
-#include "Data/Shelf.h"
-#include "Data/OpenShelfList.h"
-#include "config.h"
+#include "Shift74HC595.h"
+#include "Shelf.h"
+#include "OpenShelfList.h"
 
 class ShelfsInterface {
 
   public:
 
-    ShelfsInterface();
+    ShelfsInterface(uint8_t, uint8_t, uint8_t, uint8_t);
 
     /**
      * 
